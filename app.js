@@ -1,4 +1,5 @@
 const express = require('express')
+const exphbs = require('express-handlebars')
 const app = express()
 const path = require('path')
 const bodyParser = require('body-parser')
@@ -27,6 +28,9 @@ mongoose.connect(config.database, {
   useMongoClient: true
 })
 
+app.engine('handlebars', exphbs({defaultLayout: false}))
+app.set('view engine', 'handlebars')
+
 app.use(bodyParser.json({
   limit: '4mb'
 }))
@@ -40,17 +44,6 @@ app.use(logger('dev'))
 app.use(helmet())
 
 app.use(passport.initialize())
-
-app.use((err, req, res, next) => {
-  if (err.message.match(/not found/)) {
-    return res.status(404).send({
-      error: err.message
-    })
-  }
-  res.status(500).send({
-    error: err.message
-  })
-})
 
 function handleFatalError(err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
@@ -72,4 +65,15 @@ if (!module.parent) {
   })
 
   router(app, io)
+
+  app.use((err, req, res, next) => {
+  if (err.message.match(/not found/)) {
+    return res.status(404).send({
+      error: err.message
+    })
+  }
+  res.status(500).send({
+    error: err.message
+  })
+})
 }

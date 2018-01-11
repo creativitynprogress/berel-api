@@ -4,13 +4,18 @@ module.exports = (app, io) => {
     const passport = require('passport')
 
     const authenticathion_controller = require('../controllers/authentication')
-    const supplies_controller = require('../controllers/supplie')
+    const paints_controller = require('../controllers/paint')
     const products_controller = require('../controllers/product')
-    
+    const tickets_controller = require('../controllers/ticket')
+    const subsidiary_controller = require('../controllers/subsidiary')
+    const line_controller = require('../controllers/line')
+    const range_controller = require('../controllers/range')
+    const sr_controller = require('../controllers/subsidiaryrange')
+
     const require_auth = passport.authenticate('jwt', {
         session: false
       })
-      
+
     const require_login = passport.authenticate('local', {
         session: false
     })
@@ -22,16 +27,42 @@ module.exports = (app, io) => {
     auth_routes.post('/register', authenticathion_controller.register)
     auth_routes.post('/login', require_login, authenticathion_controller.login)
 
-    api_routes.post('/supplie', require_auth, supplies_controller.supplie_create)
-    api_routes.put('/supplie', require_auth, supplies_controller.supplie_update)
-    api_routes.delete('/supplie', require_auth, supplies_controller.supplie_delete)
-    api_routes.get('/supplie', require_auth, supplies_controller.supplie_list)
+    api_routes.post('/subsidiary', require_auth, subsidiary_controller.subsidiary_create)
+    api_routes.get('/subsidiary', require_auth, subsidiary_controller.subsidiary_list)
+    api_routes.put('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_update)
+    api_routes.delete('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_delete)
+
+    api_routes.post('/subsidiary/:subsidiaryId/line/:lineId/range/:rangeId/sr', require_auth, sr_controller.sr_create)
+    api_routes.get('/subsidiary/:subsidiaryId/line/:lineId/sr', require_auth, sr_controller.sr_by_line)
+    api_routes.put('/subsidiary/:subsidiaryId/line/:lineId/range/:rangeId/sr/:subsidiaryrangeId', require_auth, sr_controller.sr_update)
+
+    api_routes.post('/line', require_auth, line_controller.line_create)
+    api_routes.get('/line', require_auth, line_controller.line_list)
+    api_routes.put('/line/:lineId', require_auth, line_controller.line_update)
+    api_routes.delete('/line/:lineId', require_auth, line_controller.line_delete)
+
+    api_routes.post('/line/:lineId/range', require_auth, range_controller.range_create)
+    api_routes.get('/line/:lineId/range', require_auth, range_controller.range_by_line)
+    api_routes.put('/line/:lineId/range/:rangeId', require_auth, range_controller.range_update)
+    api_routes.delete('/line/:lineId/range/:rangeId', require_auth, range_controller.range_delete)
+
+    api_routes.post('/paint', require_auth, paints_controller.paint_create)
+    api_routes.get('/paint', require_auth, paints_controller.paint_list)
+    api_routes.get('/paint/:paintId', require_auth, paints_controller.paint_details)
+    api_routes.get('/paint/user/:paintId', require_auth, paints_controller.paint_details_for_users)
+    api_routes.put('/paint/:paintId', require_auth, paints_controller.paint_update)
+    api_routes.delete('/paint/:paintId', require_auth, paints_controller.paint_delete)
+    api_routes.post('/paint/:paintId/presentation', require_auth, paints_controller.presentation_create)
+    api_routes.put('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_update)
+    api_routes.delete('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_delete)
 
     api_routes.post('/product', require_auth, products_controller.product_create)
-    api_routes.put('/product/productId', require_auth, products_controller.product_update)
     api_routes.get('/product', require_auth, products_controller.product_list)
-    api_routes.delete('/product/productId', require_auth, products_controller.product_delete)
+    api_routes.put('/product/:productId', require_auth, products_controller.product_update)
+    api_routes.delete('/product/:productId', require_auth, products_controller.product_delete)
 
+    api_routes.post('/ticket/:subsidiaryId', require_auth, tickets_controller.ticket_create)
+    api_routes.put('/ticket/:subsidiaryId/:ticketId', require_auth, tickets_controller.ticket_update)
 
     app.use('/api', api_routes)
 }

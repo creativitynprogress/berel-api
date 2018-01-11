@@ -19,9 +19,12 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['Owner', 'Admin', 'Manager'],
+        enum: ['Owner', 'Admin'],
         default: 'Owner'
     }
+}, {
+    timestamps: true,
+    versionKey: false
 })
 
 userSchema.pre('save', function (next) {
@@ -30,7 +33,6 @@ userSchema.pre('save', function (next) {
 
     if (!owner.isModified('password')) return next()
 
-    console.log(owner)
     const salt = bcrypt.genSaltSync(SALT_FACTOR)
     const hash = bcrypt.hashSync(owner.password, salt)
 
