@@ -11,6 +11,8 @@ module.exports = (app, io) => {
     const line_controller = require('../controllers/line')
     const range_controller = require('../controllers/range')
     const sr_controller = require('../controllers/subsidiaryrange')
+    const sp_controller = require('../controllers/subsidiaryproduct')
+    const po_controller = require('../controllers/productowner')
 
     const require_auth = passport.authenticate('jwt', {
         session: false
@@ -35,6 +37,13 @@ module.exports = (app, io) => {
     api_routes.post('/subsidiary/:subsidiaryId/line/:lineId/range/:rangeId/sr', require_auth, sr_controller.sr_create)
     api_routes.get('/subsidiary/:subsidiaryId/line/:lineId/sr', require_auth, sr_controller.sr_by_line)
     api_routes.put('/subsidiary/:subsidiaryId/line/:lineId/range/:rangeId/sr/:subsidiaryrangeId', require_auth, sr_controller.sr_update)
+
+    api_routes.post('/subsidiary/:subsidiaryId/product/:productId/sp', require_auth, sp_controller.sp_create)
+    api_routes.get('/subsidiary/:subsidiaryId/sp', require_auth, sp_controller.sp_list)
+
+    api_routes.post('/subsidiary/:subsidiaryId/productowner', require_auth, po_controller.po_create)
+    api_routes.put('/subsidiary/:subsidiaryId/productowner/:poId', require_auth, po_controller.po_update)
+    api_routes.delete('/subsidiary/:subsidiaryId/productowner/:poId', require_auth, po_controller.po_delete)
 
     api_routes.post('/line', require_auth, line_controller.line_create)
     api_routes.get('/line', require_auth, line_controller.line_list)
