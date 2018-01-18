@@ -1,13 +1,25 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const ticketItem = new Schema({
-    quantity: { type: Number, required: true, min: 1},
-    name: { type: String },
-    presentation: { type: String },
-    price: { type: Number },
-    paint: { type: Schema.Types.ObjectId, ref: 'Paint' },
-    product: { type: Schema.Types.ObjectId, ref: 'Product'}
+const paintItem = new Schema({
+    line: {type: String},
+    color: {type: String},
+    presentation: {type: String},
+    quantity: {type: Number, min: 1},
+    price: {type: Number},
+    paint: {type: Schema.Types.ObjectId, ref: 'Paint'}
+})
+
+const productItem = new Schema({
+    product_id: {type: String},
+    po: { type: String },
+    sp: { type: String },
+    unit: { type: String },
+    quantity: { type: String },
+    bar_code: { type: String },
+    description: { type: String },
+    brand: { type: String },
+    price: { type: Number }
 })
 
 const paySchema = new Schema({
@@ -16,7 +28,8 @@ const paySchema = new Schema({
 })
 
 const ticketSchema = new Schema({
-    items: [ticketItem],
+    paints: [paintItem],
+    products: [productItem],
     pays: [paySchema],
     total: {type: Number, required: true},
     subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'}

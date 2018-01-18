@@ -13,9 +13,9 @@ async function po_create(req, res, next) {
 		let product = {
 			po: product_owner._id,
 			subsidiary: product_owner.subsidiary,
-			salePrice: product_owner.subsidiary,
+			salePrice: product_owner.salePrice,
 			stock: product_owner.stock,
-			product_id: product_owner.product._id,
+			product_id: product_owner.product_id,
 			description: product_owner.description,
 			bar_code: product_owner.bar_code,
 			category: product_owner.category,
@@ -57,9 +57,22 @@ async function po_delete(req, res, next) {
 	try {
 		const product_owner_id = req.params.poId
 
-		let product_deleted = await ProductOwner.findByIdAndRemove(product_owner_id)
+		let product_owner = await ProductOwner.findByIdAndRemove(product_owner_id)
 
-		sendJSONresponse(res, 200, product_deleted)
+		let product = {
+			po: product_owner._id,
+			subsidiary: product_owner.subsidiary,
+			salePrice: product_owner.salePrice,
+			stock: product_owner.stock,
+			product_id: product_owner.product_id,
+			description: product_owner.description,
+			bar_code: product_owner.bar_code,
+			category: product_owner.category,
+			unit: product_owner.unit,
+			brand: product_owner.brand
+		}
+
+		sendJSONresponse(res, 200, product)
 	} catch (e) {
 		return next(e)
 	}

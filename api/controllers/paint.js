@@ -88,6 +88,7 @@ async function paint_details_for_users(req, res, next) {
         presentations: presentations_format,
         category: paint.category,
         line: paint.line,
+        color: paint.color,
         enable: paint.enable
     }
 
@@ -128,8 +129,14 @@ async function paint_delete(req, res, next) {
 async function paint_list(req, res, next) {
     try {
         const user = req.user
+        const lineId = req.query.lineId
+        let paints = []
 
-        let paints = await Paint.find({}, '-presentations').populate('line range')
+        if (lineId) {
+            paints = await Paint.find({line: lineId}, '-presentations').populate('line range')
+        } else {
+            paints = await Paint.find({}, '-presentations').populate('line range')
+        }
 
         sendJSONresponse(res, 200, paints)
     } catch(e) {

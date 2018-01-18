@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const productOwnerSchema = new Schema({
   subsidiary: { type: Schema.Types.ObjectId, ref: 'Subsidiary', required: true },
-  product_id: { type: String, unique: true },
+  product_id: { type: String },
   bar_code: { type: String },
   description: { type: String, required: true },
   brand: { type: String, required: true },
