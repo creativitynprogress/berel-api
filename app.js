@@ -27,9 +27,6 @@ mongoose.connect(config.database, {
   useMongoClient: true
 })
 
-app.engine('handlebars', exphbs({defaultLayout: false}))
-app.set('view engine', 'handlebars')
-
 app.use(bodyParser.json({
   limit: '4mb'
 }))
