@@ -9,7 +9,6 @@ const elementSchema = new Schema({
 
 const presentationSchema = new Schema({
   name: { type: String, enum: ['1L', '4L', '19L'] },
-  base: { type: String},
   elements: [elementSchema]
 })
 
@@ -17,6 +16,7 @@ const paintSchema = new Schema({
     color: { type: String, required: true },
     category: { type: String, enum: ['Base agua', 'Esmaltes'], required: true},
     presentations: [presentationSchema],
+    base: { type: String},
     line: { type: Schema.Types.ObjectId, ref: 'Line', required: true },
     range: { type: Schema.Types.ObjectId, ref: 'Range', required: true },
     enable: { type: Boolean, default: true }
