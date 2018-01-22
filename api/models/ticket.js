@@ -32,7 +32,9 @@ const ticketSchema = new Schema({
     products: [productItem],
     pays: [paySchema],
     total: {type: Number, required: true},
-    subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'}
+    subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'},
+    date: { type: Number, required: true },
+    boxcut: { type: Schema.Types.ObjectId, ref: 'BoxCut' }
 }, {
     timestamps: true,
     versionKey: false

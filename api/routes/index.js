@@ -13,6 +13,7 @@ module.exports = (app, io) => {
     const sr_controller = require('../controllers/subsidiaryrange')
     const sp_controller = require('../controllers/subsidiaryproduct')
     const po_controller = require('../controllers/productowner')
+    const boxcut_controller = require('../controllers/boxcut')
 
     const require_auth = passport.authenticate('jwt', {
         session: false
@@ -70,8 +71,13 @@ module.exports = (app, io) => {
     api_routes.put('/product/:productId', require_auth, products_controller.product_update)
     api_routes.delete('/product/:productId', require_auth, products_controller.product_delete)
 
-    api_routes.post('/ticket/:subsidiaryId', require_auth, tickets_controller.ticket_create)
-    api_routes.put('/ticket/:subsidiaryId/:ticketId', require_auth, tickets_controller.ticket_update)
+    api_routes.get('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_list)
+    api_routes.get('/subsidiary/:subsidiaryId/ticket/noboxcut', require_auth, tickets_controller.tickets_without_boxcut)
+    api_routes.post('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_create)
+    api_routes.put('/subsidiary/:subsidiaryId/ticket/:ticketId', require_auth, tickets_controller.ticket_update)
+
+    api_routes.post('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_create)
+    api_routes.get('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_list)
 
     app.use('/api', api_routes)
 }
