@@ -31,6 +31,7 @@ module.exports = (app, io) => {
     auth_routes.post('/login', require_login, authenticathion_controller.login)
 
     api_routes.post('/subsidiary', require_auth, subsidiary_controller.subsidiary_create)
+    api_routes.get('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_details)
     api_routes.get('/subsidiary', require_auth, subsidiary_controller.subsidiary_list)
     api_routes.put('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_update)
     api_routes.delete('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_delete)
@@ -78,6 +79,7 @@ module.exports = (app, io) => {
 
     api_routes.post('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_create)
     api_routes.get('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_list)
+    api_routes.get('/subsidiary/:subsidiaryId/boxcut/:boxcutId', require_auth, boxcut_controller.boxcut_details)
 
     app.use('/api', api_routes)
 }

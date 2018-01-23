@@ -17,6 +17,18 @@ async function subsidiary_create(req, res, next) {
   }
 }
 
+async function subsidiary_details(req, res, next) {
+  try {
+    const subsidiary_id = req.params.subsidiaryId
+
+    let subsidiary = await Subsidiary.findById(subsidiary_id)
+
+    sendJSONresponse(res, 200, subsidiary)
+  } catch(e) {
+    return next(e)
+  }
+}
+
 async function subsidiary_update(req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiaryId
@@ -54,6 +66,7 @@ async function subsidiary_delete(req, res, next) {
 
 module.exports = {
   subsidiary_create,
+  subsidiary_details,
   subsidiary_update,
   subsidiary_list,
   subsidiary_delete

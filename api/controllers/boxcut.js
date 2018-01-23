@@ -29,6 +29,18 @@ async function boxcut_create (req, res, next) {
 	}
 }
 
+async function boxcut_details (req, res, next) {
+	try {
+		const boxcut_id = req.params.boxcutId
+
+		let boxcut = await Boxcut.findById(boxcut_id).populate('tickets')
+
+		sendJSONresponse(res, 200, boxcut)
+	} catch (e) {
+		return next(e)
+	}
+}
+
 
 async function boxcut_list (req, res, next) {
 	try {
@@ -44,5 +56,6 @@ async function boxcut_list (req, res, next) {
 
 module.exports = {
 	boxcut_create,
-	boxcut_list
+	boxcut_list,
+	boxcut_details
 }
