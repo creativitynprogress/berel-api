@@ -12,7 +12,7 @@ const presentationSchema = new Schema({
   elements: [elementSchema]
 })
 
-const paintSchema = new Schema({
+const paintOwnerSchema = new Schema({
     color: { type: String, required: true },
     presentations: [presentationSchema],
     base: { type: String},
@@ -24,4 +24,7 @@ const paintSchema = new Schema({
     versionKey: false
 })
 
-module.exports = mongoose.model('Paint', paintSchema)
+module.exports = mongoose.model('Paint', paintOwnerSchema)
+
+//Si se quieren agregar pinturas que no son de Berel, 
+//estas se deben emparejar con una línea y un rango, no pueden cambiar de precio.

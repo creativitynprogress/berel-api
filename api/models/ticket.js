@@ -5,6 +5,7 @@ const paintItem = new Schema({
     line: {type: String},
     color: {type: String},
     presentation: {type: String},
+    base: {type: String},
     quantity: {type: Number, min: 1},
     price: {type: Number},
     paint: {type: Schema.Types.ObjectId, ref: 'Paint'}
@@ -34,6 +35,7 @@ const ticketSchema = new Schema({
     total: {type: Number, required: true},
     subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'},
     date: { type: Number, required: true },
+    client: { type: Schema.Types.ObjectId, ref: 'Client' },
     boxcut: { type: Schema.Types.ObjectId, ref: 'BoxCut' }
 }, {
     timestamps: true,

@@ -1,5 +1,7 @@
 const Ticket = require('../models/ticket')
 const Subsidiary = require('../models/subsidiary')
+const Base = require('../models/base')
+const BaseSubsidiary = require('../models/basesubsidiary')
 const sendJSONresponse = require('./shared').sendJSONresponse
 
 async function ticket_list(req, res, next) {
@@ -41,6 +43,24 @@ async function ticket_create (req, res, next) {
 
     let ticket = new Ticket(req.body)
     ticket.subsidiary = subsidiary_id
+
+    //  Función para disminuir la base según la pintura que se compró
+    ticket_copy = await Ticket.populate(ticket, {path: 'paints.paint', model: 'Paint'})
+    ticket_copy.paints.forEach(p => {
+      Base.find({line: p.paint.line}, 'presentation', (err, bases) => {
+        if (err) throw Error(err.message)
+        let base = bases.find(b => b.presentation === p.presentation)
+        BaseSubsidiary.findOne({base: base._id}, (err, bs) => {
+          if (bs.stock > 0 && bs.stock > p.quantity) {
+            bs.stock = bs.stock - p.quantity
+            bs.save()
+          } else {
+            bs.stock = 0
+            bs.save()
+          }
+        })
+      })
+    })
 
     ticket = await ticket.save()
 

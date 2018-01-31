@@ -50,7 +50,6 @@ async function paint_details_for_users(req, res, next) {
                 presentation = {
                     _id: p._id,
                     name: p.name,
-                    base: p.base,
                     elements: p.elements,
                     suggestedPrice: paint.range.liter,
                     salePrice: sr_liter
@@ -62,7 +61,6 @@ async function paint_details_for_users(req, res, next) {
                 presentation = {
                     _id: p._id,
                     name: p.name,
-                    base: p.base,
                     elements: p.elements,
                     suggestedPrice: paint.range.gallon,
                     salePrice: sr_gallon
@@ -74,7 +72,6 @@ async function paint_details_for_users(req, res, next) {
                 presentation = {
                     _id: p._id,
                     name: p.name,
-                    base: p.base,
                     elements: p.elements,
                     suggestedPrice: paint.range.bucket,
                     salePrice: sr_bucket
@@ -89,6 +86,7 @@ async function paint_details_for_users(req, res, next) {
         category: paint.category,
         line: paint.line,
         color: paint.color,
+        base: paint.base,
         enable: paint.enable
     }
 

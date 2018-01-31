@@ -6,6 +6,8 @@ module.exports = (app, io) => {
     const authenticathion_controller = require('../controllers/authentication')
     const paints_controller = require('../controllers/paint')
     const products_controller = require('../controllers/product')
+    const base_controller = require('../controllers/base')
+    const bs_controller = require('../controllers/basesubsidiary')
     const tickets_controller = require('../controllers/ticket')
     const subsidiary_controller = require('../controllers/subsidiary')
     const line_controller = require('../controllers/line')
@@ -14,6 +16,7 @@ module.exports = (app, io) => {
     const sp_controller = require('../controllers/subsidiaryproduct')
     const po_controller = require('../controllers/productowner')
     const boxcut_controller = require('../controllers/boxcut')
+    const client_controller = require('../controllers/client')
 
     const require_auth = passport.authenticate('jwt', {
         session: false
@@ -36,6 +39,7 @@ module.exports = (app, io) => {
     api_routes.put('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_update)
     api_routes.delete('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_delete)
 
+    //  Rangos
     api_routes.post('/subsidiary/:subsidiaryId/line/:lineId/range/:rangeId/sr', require_auth, sr_controller.sr_create)
     api_routes.get('/subsidiary/:subsidiaryId/line/:lineId/sr', require_auth, sr_controller.sr_by_line)
     api_routes.put('/subsidiary/:subsidiaryId/line/:lineId/range/:rangeId/sr/:subsidiaryrangeId', require_auth, sr_controller.sr_update)
@@ -47,10 +51,23 @@ module.exports = (app, io) => {
     api_routes.put('/subsidiary/:subsidiaryId/productowner/:poId', require_auth, po_controller.po_update)
     api_routes.delete('/subsidiary/:subsidiaryId/productowner/:poId', require_auth, po_controller.po_delete)
 
+    //  Lineas
     api_routes.post('/line', require_auth, line_controller.line_create)
     api_routes.get('/line', require_auth, line_controller.line_list)
     api_routes.put('/line/:lineId', require_auth, line_controller.line_update)
     api_routes.delete('/line/:lineId', require_auth, line_controller.line_delete)
+
+    //  Base
+    api_routes.post('/base', require_auth, base_controller.base_create)
+    api_routes.get('/base', require_auth, base_controller.base_list)
+    api_routes.put('/base/:baseId', require_auth, base_controller.base_update)
+    api_routes.delete('/base/:baseId', require_auth, base_controller.base_delete)
+
+    //  BaseSubsidiary
+    api_routes.post('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, bs_controller.bs_create)
+    api_routes.get('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, bs_controller.bs_list)
+    api_routes.put('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_update)
+    api_routes.delete('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_delete)
 
     api_routes.post('/line/:lineId/range', require_auth, range_controller.range_create)
     api_routes.get('/line/:lineId/range', require_auth, range_controller.range_by_line)
@@ -77,9 +94,16 @@ module.exports = (app, io) => {
     api_routes.post('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_create)
     api_routes.put('/subsidiary/:subsidiaryId/ticket/:ticketId', require_auth, tickets_controller.ticket_update)
 
+    //  Boxcut
     api_routes.post('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_create)
     api_routes.get('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_list)
     api_routes.get('/subsidiary/:subsidiaryId/boxcut/:boxcutId', require_auth, boxcut_controller.boxcut_details)
+
+    //  Client
+    api_routes.post('/client', require_auth, client_controller.client_create)
+    api_routes.get('/client', require_auth, client_controller.client_list)
+    api_routes.put('/client/:clientId', require_auth, client_controller.client_update)
+    api_routes.delete('/client/:clientId', require_auth, client_controller.client_delete)
 
     app.use('/api', api_routes)
 }

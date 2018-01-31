@@ -19,7 +19,7 @@ async function product_create(req, res, next) {
 async function product_list(req, res, next) {
   try {
 
-    let products = await Product.find({})
+    let products = await Product.find({}).populate('line')
 
     sendJSONresponse(res, 200, products)
 
