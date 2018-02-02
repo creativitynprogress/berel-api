@@ -24,17 +24,34 @@ const productItem = new Schema({
 })
 
 const paySchema = new Schema({
-  type: { type: String, required: true },
-  quantity: { type: Number, required: true }
+  pays_card: [{
+        card: {type: Schema.ObjectId, ref: 'Card', required: true},
+        amount: { type: Number, required: true }
+  }],
+  pays_cash: [{amount: {type: Number, required: true}}],
+  pays_check: [{
+    name: {type: String, required: true },
+    number_check: { type: String, required: true },
+    amount: {type: Number, required: true },
+    date: { type: Number, required: true }
+  }],
+  pays_transfer: [{
+    number_reference: { type: Number, required: true },
+    date: { type: Number, required: true },
+    folio: { type: String, required: true },
+    tracking_key: { type: String, required: true }
+  }]
 })
+
 
 const ticketSchema = new Schema({
     paints: [paintItem],
     products: [productItem],
-    pays: [paySchema],
+    pays: paySchema,
     total: {type: Number, required: true},
     subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'},
     date: { type: Number, required: true },
+    payed: { type: Boolean, default: true },
     client: { type: Schema.Types.ObjectId, ref: 'Client' },
     boxcut: { type: Schema.Types.ObjectId, ref: 'BoxCut' }
 }, {
@@ -42,4 +59,7 @@ const ticketSchema = new Schema({
     versionKey: false
 })
 
-module.exports = mongoose.model('Ticket', ticketSchema)
+module.exports = {
+    ticket: mongoose.model('Ticket', ticketSchema),
+    pays: mongoose.model('Pays', paySchema)
+}

@@ -1,4 +1,4 @@
-const Ticket = require('../models/ticket')
+const Ticket = require('../models/ticket').ticket
 const Subsidiary = require('../models/subsidiary')
 const Base = require('../models/base')
 const BaseSubsidiary = require('../models/basesubsidiary')
@@ -29,7 +29,7 @@ async function tickets_without_boxcut (req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiaryId
 
-    let tickets = await Ticket.find({subsidiary: subsidiary_id, boxcut: {$eq: null}})
+    let tickets = await Ticket.find({subsidiary: subsidiary_id, boxcut: {$eq: null}}).populate('client', 'name')
 
     sendJSONresponse(res, 200, tickets)
   } catch (e) {
@@ -51,18 +51,22 @@ async function ticket_create (req, res, next) {
         if (err) throw Error(err.message)
         let base = bases.find(b => b.presentation === p.presentation)
         BaseSubsidiary.findOne({base: base._id}, (err, bs) => {
-          if (bs.stock > 0 && bs.stock > p.quantity) {
-            bs.stock = bs.stock - p.quantity
-            bs.save()
-          } else {
-            bs.stock = 0
-            bs.save()
+          if (bs) {
+            if (bs.stock > 0 && bs.stock > p.quantity) {
+              bs.stock = bs.stock - p.quantity
+              bs.save()
+            } else {
+              bs.stock = 0
+              bs.save()
+            }
           }
         })
       })
     })
 
     ticket = await ticket.save()
+
+    ticket = await Ticket.populate(ticket, {path: 'client', select: 'name'})
 
     sendJSONresponse(res, 201, ticket)
   } catch (e) {

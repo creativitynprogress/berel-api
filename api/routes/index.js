@@ -17,6 +17,7 @@ module.exports = (app, io) => {
     const po_controller = require('../controllers/productowner')
     const boxcut_controller = require('../controllers/boxcut')
     const client_controller = require('../controllers/client')
+    const card_controller = require('../controllers/card')
 
     const require_auth = passport.authenticate('jwt', {
         session: false
@@ -62,6 +63,11 @@ module.exports = (app, io) => {
     api_routes.get('/base', require_auth, base_controller.base_list)
     api_routes.put('/base/:baseId', require_auth, base_controller.base_update)
     api_routes.delete('/base/:baseId', require_auth, base_controller.base_delete)
+
+    //  Cards
+    api_routes.post('/card', require_auth, card_controller.card_create)
+    api_routes.get('/card', require_auth, card_controller.card_list)
+    api_routes.delete('/card/:cardId', require_auth, card_controller.card_delete)
 
     //  BaseSubsidiary
     api_routes.post('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, bs_controller.bs_create)
