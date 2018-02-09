@@ -93,6 +93,7 @@ module.exports = (app, io) => {
     api_routes.post('/paint/:paintId/presentation', require_auth, paints_controller.presentation_create)
     api_routes.put('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_update)
     api_routes.delete('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_delete)
+    api_routes.post('/paint/excelupload/:lineId', require_auth, paints_controller.paints_by_excel) /// upload file feature
 
     api_routes.post('/product', require_auth, products_controller.product_create)
     api_routes.get('/product', require_auth, products_controller.product_list)
