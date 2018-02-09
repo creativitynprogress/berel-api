@@ -47,11 +47,12 @@ const paySchema = new Schema({
 const ticketSchema = new Schema({
     paints: [paintItem],
     products: [productItem],
-    pays: paySchema,
+    cash_pays: [{ type: Schema.Types.ObjectId, ref: 'CashPayment'}],
+    card_pays: [{ type: Schema.Types.ObjectId, ref: 'CardPayment'}],
     total: {type: Number, required: true},
     subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'},
     date: { type: Number, required: true },
-    payed: { type: Boolean, default: true },
+    payed: { type: Boolean, default: false },
     client: { type: Schema.Types.ObjectId, ref: 'Client' },
     boxcut: { type: Schema.Types.ObjectId, ref: 'BoxCut' }
 }, {

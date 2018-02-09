@@ -212,6 +212,15 @@ async function presentation_delete(req, res, next) {
   }
 }
 
+
+async function paints_by_excel(req, res, next) {
+    try {
+
+    } catch (e) {
+        return next (e)
+    }
+}
+
 module.exports = {
     paint_create,
     paint_details,

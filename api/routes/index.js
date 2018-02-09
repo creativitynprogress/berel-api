@@ -8,7 +8,11 @@ module.exports = (app, io) => {
     const products_controller = require('../controllers/product')
     const base_controller = require('../controllers/base')
     const bs_controller = require('../controllers/basesubsidiary')
+
     const tickets_controller = require('../controllers/ticket')
+    const cash_payment_controller = require('../controllers/cashpayment')
+    const card_payment_controller = require('../controllers/cardpayment')
+    
     const subsidiary_controller = require('../controllers/subsidiary')
     const line_controller = require('../controllers/line')
     const range_controller = require('../controllers/range')
@@ -95,10 +99,19 @@ module.exports = (app, io) => {
     api_routes.put('/product/:productId', require_auth, products_controller.product_update)
     api_routes.delete('/product/:productId', require_auth, products_controller.product_delete)
 
+    //  Ticket
     api_routes.get('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_list)
     api_routes.get('/subsidiary/:subsidiaryId/ticket/noboxcut', require_auth, tickets_controller.tickets_without_boxcut)
     api_routes.post('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_create)
     api_routes.put('/subsidiary/:subsidiaryId/ticket/:ticketId', require_auth, tickets_controller.ticket_update)
+    //  Cash Payments
+    api_routes.post('/subsidiary/:subsidiary_id/ticket/:ticket_id/cash_payment', require_auth, cash_payment_controller.cp_create)
+    api_routes.get('/subsidiary/:subsidiary_id/ticket/:ticket_id/cash_payment/by_ticket', require_auth, cash_payment_controller.cp_list_by_ticket)
+    api_routes.delete('/subsidiary/:subsidiary_id/ticket/:ticket_id/cash_payment/:cp_id', require_auth, cash_payment_controller.cp_delete)
+    //  Card Payments
+    api_routes.post('/subsidiary/:subsidiary_id/ticket/:ticket_id/card_payment', require_auth, card_payment_controller.cp_create)
+    api_routes.get('/subsidiary/:subsidiary_id/ticket/:ticket_id/card_payment/by_ticket', require_auth, card_payment_controller.cp_list_by_ticket)
+    api_routes.delete('/subsidiary/:subsidiary_id/ticket/:ticket_id/card_payment/:cp_id', require_auth, card_payment_controller.cp_delete)
 
     //  Boxcut
     api_routes.post('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_create)
