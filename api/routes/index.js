@@ -86,6 +86,7 @@ module.exports = (app, io) => {
 
     api_routes.post('/paint', require_auth, paints_controller.paint_create)
     api_routes.get('/paint', require_auth, paints_controller.paint_list)
+    api_routes.get('/paint/owner', require_auth, paints_controller.paint_owner_list)
     api_routes.get('/paint/:paintId', require_auth, paints_controller.paint_details)
     api_routes.get('/paint/user/:paintId', require_auth, paints_controller.paint_details_for_users)
     api_routes.put('/paint/:paintId', require_auth, paints_controller.paint_update)

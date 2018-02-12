@@ -131,10 +131,26 @@ async function paint_list(req, res, next) {
         let paints = []
 
         if (lineId) {
-            paints = await Paint.find({line: lineId}, '-presentations').populate('line range')
+            paints = await Paint.find(
+            {
+                line: lineId, 
+                $or: [{user: user._id}, {user: {$exists: false}}]
+            }, '-presentations').populate('line range')
         } else {
-            paints = await Paint.find({}, '-presentations').populate('line range')
+            paints = await Paint.find({$or: [{user: user._id}, {user: {$exists: false}}]}, '-presentations').populate('line range')
         }
+
+        sendJSONresponse(res, 200, paints)
+    } catch(e) {
+        return next(e)
+    }
+}
+
+async function paint_owner_list(req, res, next) {
+    try {
+        const user = req.user
+
+        let paints = await Paint.find({user: user._id}, '-presentations').populate('line range')
 
         sendJSONresponse(res, 200, paints)
     } catch(e) {
@@ -228,6 +244,7 @@ module.exports = {
     paint_update,
     paint_delete,
     paint_list,
+    paint_owner_list,
     presentation_create,
     presentation_update,
     presentation_delete

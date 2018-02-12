@@ -13,6 +13,7 @@ const presentationSchema = new Schema({
 })
 
 const paintSchema = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
     color: { type: String, required: true },
     presentations: [presentationSchema],
     base: { type: String},
