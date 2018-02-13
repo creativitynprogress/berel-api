@@ -3,7 +3,7 @@
 const Paint = require('../models/paint')
 const SubsidiaryRange = require('../models/subsidiaryrange')
 const sendJSONresponse = require('./shared').sendJSONresponse
-const excelReader = require('../utils/excelReader').saveExcel
+const excelReader = require('../utils/excelReader')
 const multer = require('multer');
 async function paint_create(req, res, next) {
     try {
@@ -216,29 +216,9 @@ async function presentation_delete(req, res, next) {
 
 async function paints_by_excel(req, res, next) {
     try {
-        /// cachar el excel, guardarlo, sacar su nombre y llamas la funcion con sus parametros
-       
-        const upload = multer({
-            dest: 'uploads/' // this saves your file into a directory called "uploads"
-          }); 
-          upload.single('file-to-upload'), (req, res) =>{
-            saveExcel(req.params.lineId,req.file.filename)
-          }
-          /**
-           * const upload = multer({
-                dest: 'uploads/' // this saves your file into a directory called "uploads"
-            }); 
-            const app = express();
-            
-            app.get('/', (req, res) => {
-                res.sendFile(__dirname + '/index.html');
-            });
-            app.post('/', upload.single('file-to-upload'), (req, res) => {
-                res.redirect('/');
-                console.log(req.file)
-                saveExcel(req.file.filename)
-            });
-           */
+   
+          excelReader.saveExcel(req.params.lineId,req.file.filename,next)
+ 
 
     } catch (e) {
         return next (e)

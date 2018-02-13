@@ -3,25 +3,6 @@ const Paint = require('../models/paint')
 const mongoose = require('mongoose')
 const Range = require('../models/range')
 
-let paints = []
-let paintName///color
-const line
-const category = 'Base agua' /// this can change with the sheet .
-let base 
-//// buscar de la bd  Rango segun el id de la linea  eso se guarda en el arreglo de rango 
-
-
-let range 
-let presentations = [] // objs array
-let presentationsName // name 1l,4l,19l 
-let onelts = []
-let fourlts =[]
-let nineteenlts = []
-
-let values = [] ///objs array
-let colorant // ink .
-let ounce
-let ouncePart
 
 /**
  * Need to change next things:
@@ -32,12 +13,31 @@ let ouncePart
  */
 
 
-function saveExcel(req, res, line, file_name) {
+async function saveExcel(req, res, line, file_name,next) {
+    
+    let paints = []
+    let paintName///color
+    //const line =  
+    const category = 'Base agua' /// this can change with the sheet .
+    let base 
+    //// buscar de la bd  Rango segun el id de la linea  eso se guarda en el arreglo de rango 
+
+    let range 
+    let presentations = [] // objs array
+    let presentationsName // name 1l,4l,19l 
+    let onelts = []
+    let fourlts =[]
+    let nineteenlts = []
+
+    let values = [] ///objs array
+    let colorant // ink .
+    let ounce
+    let ouncePart
 try {   
             line = line /// check if this way or pass line in savePresentation and outgoing 
             const workSheetsFromFile = xlsx.parse(`${__dirname}/${file_name}`); /// File PATH
 
-            const rango = await Range.findById(line.__id)
+            let rango = await Range.findById(line.__id)
 
             workSheetsFromFile[0].data.forEach(function(val,j) {
                 let cont = true    
