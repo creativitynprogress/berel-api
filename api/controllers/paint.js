@@ -12,7 +12,7 @@ async function paint_create(req, res, next) {
         let paint = new Paint(req.body)
         paint = await paint.save()
         paint = await Paint.populate(paint, 'line range')
-
+        /// Delete the file sentence MULTER
         sendJSONresponse(res, 201, paint)
     } catch(e) {
         return next(e)
@@ -216,10 +216,10 @@ async function presentation_delete(req, res, next) {
 
 async function paints_by_excel(req, res, next) {
     try {
-   
-          excelReader.saveExcel(req.params.lineId,req.file.filename,next)
- 
-
+         let lineId = req.params.lineId
+         let filename =req.file.filename
+        await  excelReader.saveExcel(req,res,lineId,filename)
+        
     } catch (e) {
         return next (e)
     }

@@ -1,52 +1,56 @@
-const xlsx = require('node-xlsx').default;
+
+const xlsx = require('node-xlsx').default
+const sendJSONresponse = require('../controllers/shared')
 const Paint = require('../models/paint')
 const mongoose = require('mongoose')
 const Range = require('../models/range')
-
-
+const path = require('path');
+ 
 /**
- * Need to change next things:
- * SavePaint are not going to save the OBJS it need to save just the IDS
- * SaveElement and SavePresentation need to change cause each one are going to make a POST to create presentation and an element
- * then just obtain the ID and thats what we are going to storage in the arrays
- * CHECK the delete of presentation in  line 216 if it stay ot remove
+ * Need to verify next things:
+   - check if is going to be need another module for the Range option cause the excel could have R-1,
+    R-2, R-3.
+   - Fix why it doesnt enter in the last line of the sheet 
  */
 
+let paints = []
+let paintName///color
+let line   
+const category = 'Base agua' /// this can change with the sheet .
+let base 
 
-async function saveExcel(req, res, line, file_name,next) {
-    
-    let paints = []
-    let paintName///color
-    //const line =  
-    const category = 'Base agua' /// this can change with the sheet .
-    let base 
-    //// buscar de la bd  Rango segun el id de la linea  eso se guarda en el arreglo de rango 
+let range 
+let presentations = [] // objs array
+let presentationsName // name 1l,4l,19l 
+let onelts = []
+let fourlts =[]
+let nineteenlts = []
 
-    let range 
-    let presentations = [] // objs array
-    let presentationsName // name 1l,4l,19l 
-    let onelts = []
-    let fourlts =[]
-    let nineteenlts = []
+let values = [] ///objs array
+let colorant // ink .
+let ounce
+let ouncePart
 
-    let values = [] ///objs array
-    let colorant // ink .
-    let ounce
-    let ouncePart
-try {   
-            line = line /// check if this way or pass line in savePresentation and outgoing 
-            const workSheetsFromFile = xlsx.parse(`${__dirname}/${file_name}`); /// File PATH
 
-            let rango = await Range.findById(line.__id)
 
+async function saveExcel(req, res, linea, file_name) {
+    line = linea
+    console.log('SaveExcel')
+    console.log('Line is: ',line, ' ++++ ',' file name:',file_name )  
+
+    try {   
+            const workSheetsFromFile = xlsx.parse(path.resolve('./uploads',file_name))     
+            let rangoObj = await Range.findOne({line:line})
             workSheetsFromFile[0].data.forEach(function(val,j) {
                 let cont = true    
+               
                 if(j === workSheetsFromFile[0].data.length -1){
                     savePresentation(onelts,fourlts,nineteenlts)
-                
+                    sendJSONresponse(res,200,paints)
                 }
 
                 if(val.length === 0 || val.includes('COLOR') ){ /// dont let read headers or empty spaces
+                    console.log('esta wea esta vacia')
                     cont = false
                 }
                 
@@ -128,8 +132,8 @@ try {
                                 }
                                 case 6:
                                 {
-                                    if(value.includes('R-'))
-                                        range = rango.__id
+                                    if(value.includes('R-')) 
+                                        range = rangoObj._id        
                                     break
                                 }
                         
@@ -140,7 +144,7 @@ try {
                 }///if
             });// foreach data
     } catch (error) {
-        return next(error)
+        return error
     }
 }/// saveexcel
 
@@ -150,12 +154,13 @@ function valueSpliter(str){
 }
 
 function saveElement(i,colorant,ounce,ouncePart){
-
+    
     let element ={
         ink: colorant,
         ounce: ounce,
         ouncePart: ouncePart
     }
+    
     //save our element in the array 
     switch (i) {
         case 3:
@@ -230,7 +235,8 @@ async function savePaint(presentations){
         paints.push(paint)  
         paint = await paint.save()
     } catch (error) {
-        console.log('dude, un error:  ', error)
+       // console.log('dude, un error al save PAINT:  ', error)
+        return error
     }
 }
 
