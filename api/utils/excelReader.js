@@ -1,17 +1,17 @@
 
+
+
 const xlsx = require('node-xlsx').default
 const sendJSONresponse = require('../controllers/shared')
 const Paint = require('../models/paint')
 const mongoose = require('mongoose')
 const Range = require('../models/range')
 const path = require('path');
- 
-/**
- * Need to verify next things:
-   - check if is going to be need another module for the Range option cause the excel could have R-1,
-    R-2, R-3.
-   - Fix why it doesnt enter in the last line of the sheet 
- */
+
+/******FEATURES TO ADD*********/
+// Try to put a return somethign to the paint.js file so it can be visualice on the send jsonresponse, check line 154
+// Checkout how the catch error handler works, cause it doesnt notify out there 
+// check and throw error when on those ifs like in line 88 the celt is not valid (1/2 for exS)
 
 let paints = []
 let paintName///color
@@ -30,33 +30,33 @@ let values = [] ///objs array
 let colorant // ink .
 let ounce
 let ouncePart
-
+let flag = false
 
 
 async function saveExcel(req, res, linea, file_name) {
     line = linea
     console.log('SaveExcel')
-    console.log('Line is: ',line, ' ++++ ',' file name:',file_name )  
-
     try {   
-            const workSheetsFromFile = xlsx.parse(path.resolve('./uploads',file_name))     
-            let rangoObj = await Range.findOne({line:line})
+            let file_path = path.resolve('./uploads',file_name)
+            const workSheetsFromFile = xlsx.parse(file_path)     
+            let rangoObj = await Range.find({line:line})
+            let FileLength = workSheetsFromFile[0].data.length
+          
+
             workSheetsFromFile[0].data.forEach(function(val,j) {
                 let cont = true    
-               
-                if(j === workSheetsFromFile[0].data.length -1){
-                    savePresentation(onelts,fourlts,nineteenlts)
-                    sendJSONresponse(res,200,paints)
+                if(j === FileLength -1){ //for save the last element
+                    flag = true
                 }
 
-                if(val.length === 0 || val.includes('COLOR') ){ /// dont let read headers or empty spaces
+                if(val.length === 0 || val.includes('COLOR') ){ /// dont let read headers or empty lines
                     console.log('esta wea esta vacia')
                     cont = false
                 }
                 
                 if(val[0] !== undefined){
                         if(( typeof(val[0])== 'number' || val[0].includes('-') || val[0].includes(' ') ) && onelts.length > 0 && cont === true ) {
-                            console.log(j,': ',val,'=> ',typeof(val), ' ::: \n')
+                            console.log(j,': ',val,'=> ',typeof(val), ' ::: ', FileLength) //This one are going to print just the PAINTS to create, except the lastone
                             savePresentation(onelts,fourlts,nineteenlts) 
                             onelts = []
                             fourlts= []
@@ -132,17 +132,28 @@ async function saveExcel(req, res, linea, file_name) {
                                 }
                                 case 6:
                                 {
-                                    if(value.includes('R-')) 
-                                        range = rangoObj._id        
+
+                                    if(value.includes('R-')){
+                                        for (let index = 0; index < rangoObj.length; index++) {
+                                                if(rangoObj[index].range === value) {
+                                                        range = rangoObj[index]._id
+                                                        break
+                                                    }
+                                        }                                        
+                                    } 
+                                                
                                     break
                                 }
-                        
                                 default:
                                     break
                         }//switch
                     });//foreach data[]
                 }///if
             });// foreach data
+    if (flag===true) {
+        savePresentation(onelts,fourlts,nineteenlts)
+    }   
+    return 'Looks, like everything upload fine'    /// This could be de PAINTS obj that is commented on line: 244
     } catch (error) {
         return error
     }
@@ -232,10 +243,10 @@ async function savePaint(presentations){
             line: line,
             range: range
         })
-        paints.push(paint)  
+//        paints.push(paint) 
         paint = await paint.save()
     } catch (error) {
-       // console.log('dude, un error al save PAINT:  ', error)
+        console.log('dude, un error al save PAINT:  ', error)
         return error
     }
 }

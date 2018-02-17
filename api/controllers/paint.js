@@ -4,7 +4,9 @@ const Paint = require('../models/paint')
 const SubsidiaryRange = require('../models/subsidiaryrange')
 const sendJSONresponse = require('./shared').sendJSONresponse
 const excelReader = require('../utils/excelReader')
-const multer = require('multer');
+const multer = require('multer')
+const fs = require('fs')
+const path = require('path');
 async function paint_create(req, res, next) {
     try {
         const user = req.user
@@ -12,7 +14,6 @@ async function paint_create(req, res, next) {
         let paint = new Paint(req.body)
         paint = await paint.save()
         paint = await Paint.populate(paint, 'line range')
-        /// Delete the file sentence MULTER
         sendJSONresponse(res, 201, paint)
     } catch(e) {
         return next(e)
@@ -213,13 +214,20 @@ async function presentation_delete(req, res, next) {
   }
 }
 
+/*
+    Future feature: Use Multer storage to prevent
+    the upload of no EXCEL files
+    or let the forntend take care about it
+*/
 
 async function paints_by_excel(req, res, next) {
     try {
          let lineId = req.params.lineId
          let filename =req.file.filename
-        await  excelReader.saveExcel(req,res,lineId,filename)
-        
+         let smthng = await  excelReader.saveExcel(req,res,lineId,filename)
+         let file_path = path.resolve('./uploads',filename)
+         fs.unlinkSync(file_path)
+         sendJSONresponse(res,200,smthng)
     } catch (e) {
         return next (e)
     }
