@@ -51,6 +51,9 @@ app.use(express.static(path.join(__dirname, 'dist')))
 app.get('/index', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'))
 });
+app.get('/upload', (req, res) => {
+  res.sendFile(__dirname + '/views/upload.html');
+});
 
 
 if (!module.parent) {
