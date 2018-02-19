@@ -9,7 +9,7 @@ async function cp_create(req, res, next) {
 		const ticket_id = req.params.ticket_id
 		let total = 0
 
-		let ticket = await Ticket.findById(ticket_id).populate('cash_pays')
+		let ticket = await Ticket.findById(ticket_id).populate('cash_pays card_pays transfers checks')
 		if (!ticket) throw Error('Ticket not found')
 
 		let cash_payment = new CashPayment(req.body)
@@ -17,7 +17,11 @@ async function cp_create(req, res, next) {
 		cash_payment.subsidiary = subsidiary_id
 		cash_payment.ticket = ticket_id
 
+		// Esto debe ser una función para ver si se completo el pago de un ticket
 		ticket.cash_pays.map(p => total += p.amount)
+		ticket.card_pays.map(p => total += p.amount)
+		ticket.transfers.map(p => total += p.amount)
+		ticket.checks.map(p => total += p.amount)
 		total += cash_payment.amount
 
 		if (total >= ticket.total) {

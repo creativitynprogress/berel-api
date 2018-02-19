@@ -25,6 +25,18 @@ async function ticket_list(req, res, next) {
   }
 }
 
+async function ticket_details(req, res, next) {
+  try {
+    const ticket_id = req.params.ticket_id
+
+    let ticket = await Ticket.findById(ticket_id).populate('cash_pays cash_pays client')
+
+    sendJSONresponse(res, 200, ticket)
+  } catch(e) {
+    return next(e)
+  }
+}
+
 async function tickets_without_boxcut (req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiaryId
@@ -91,5 +103,6 @@ module.exports = {
   ticket_create,
   ticket_update,
   ticket_list,
-  tickets_without_boxcut
+  tickets_without_boxcut,
+  ticket_details
 }

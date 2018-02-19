@@ -12,6 +12,8 @@ module.exports = (app, io) => {
     const tickets_controller = require('../controllers/ticket')
     const cash_payment_controller = require('../controllers/cashpayment')
     const card_payment_controller = require('../controllers/cardpayment')
+    const transfer_controller = require('../controllers/transfer')
+    const check_controller = require('../controllers/check')
     
     const subsidiary_controller = require('../controllers/subsidiary')
     const line_controller = require('../controllers/line')
@@ -103,6 +105,7 @@ module.exports = (app, io) => {
     //  Ticket
     api_routes.get('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_list)
     api_routes.get('/subsidiary/:subsidiaryId/ticket/noboxcut', require_auth, tickets_controller.tickets_without_boxcut)
+    api_routes.get('/subsidiary/:subsidiaryId/ticket/:ticket_id', require_auth, tickets_controller.ticket_details)
     api_routes.post('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_create)
     api_routes.put('/subsidiary/:subsidiaryId/ticket/:ticketId', require_auth, tickets_controller.ticket_update)
     //  Cash Payments

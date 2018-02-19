@@ -23,44 +23,33 @@ const productItem = new Schema({
     price: { type: Number }
 })
 
-const paySchema = new Schema({
-  pays_card: [{
-        card: {type: Schema.ObjectId, ref: 'Card', required: true},
-        amount: { type: Number, required: true }
-  }],
-  pays_cash: [{amount: {type: Number, required: true}}],
-  pays_check: [{
-    name: {type: String, required: true },
-    number_check: { type: String, required: true },
-    amount: {type: Number, required: true },
-    date: { type: Number, required: true }
-  }],
-  pays_transfer: [{
-    number_reference: { type: Number, required: true },
-    date: { type: Number, required: true },
-    folio: { type: String, required: true },
-    tracking_key: { type: String, required: true }
-  }]
-})
-
 
 const ticketSchema = new Schema({
     paints: [paintItem],
     products: [productItem],
     cash_pays: [{ type: Schema.Types.ObjectId, ref: 'CashPayment'}],
     card_pays: [{ type: Schema.Types.ObjectId, ref: 'CardPayment'}],
+    transfers: [{ type: Schema.Types.ObjectId, ref: 'Transfer'}],
+    checks: [{type: Schema.Types.ObjectId, ref: 'Check'}],
     total: {type: Number, required: true},
     subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'},
     date: { type: Number, required: true },
     payed: { type: Boolean, default: false },
     client: { type: Schema.Types.ObjectId, ref: 'Client' },
-    boxcut: { type: Schema.Types.ObjectId, ref: 'BoxCut' }
+    boxcut: { type: Schema.Types.ObjectId, ref: 'BoxCut' },
+    discount: {
+        quantity: { type: Number },
+        percentage: { type: Number }
+    },
+    invoice: {
+        state: { type: String, enum: ['pending', 'no', 'invoiced'], default: 'no' },
+        reason: { type: String }
+    }
 }, {
     timestamps: true,
     versionKey: false
 })
 
 module.exports = {
-    ticket: mongoose.model('Ticket', ticketSchema),
-    pays: mongoose.model('Pays', paySchema)
+    ticket: mongoose.model('Ticket', ticketSchema)
 }
