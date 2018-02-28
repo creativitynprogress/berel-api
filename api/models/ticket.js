@@ -38,7 +38,7 @@ const ticketSchema = new Schema({
     client: { type: Schema.Types.ObjectId, ref: 'Client' },
     boxcut: { type: Schema.Types.ObjectId, ref: 'BoxCut' },
     discount: {
-        quantity: { type: Number },
+        quantity: { type: Number, default: 0 },
         percentage: { type: Number }
     },
     invoice: {

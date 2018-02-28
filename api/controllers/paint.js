@@ -240,6 +240,7 @@ async function paints_by_excel(req, res, next) {
     try {
          let lineId = req.params.lineId
          let filename =req.file.filename
+         console.log(req.file)
          let smthng = await  excelReader.saveExcel(req,res,lineId,filename)
          let file_path = path.resolve('./uploads',filename)
          fs.unlinkSync(file_path)

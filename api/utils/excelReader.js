@@ -1,6 +1,3 @@
-
-
-
 const xlsx = require('node-xlsx').default
 const sendJSONresponse = require('../controllers/shared')
 const Paint = require('../models/paint')

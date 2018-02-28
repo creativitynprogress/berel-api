@@ -1,6 +1,7 @@
 const sendJSONresponse = require('./shared').sendJSONresponse
 const Boxcut = require('../models/boxcut')
-const Ticket = require('../models/ticket')
+const Ticket = require('../models/ticket').ticket
+const Promise = require('bluebird');
 
 async function boxcut_create (req, res, next) {
 	try {
@@ -41,6 +42,39 @@ async function boxcut_details (req, res, next) {
 	}
 }
 
+async function boxcut_request (req, res, next) {
+	try {
+		const tickets_ids = req.body.tickets
+
+		let cash_pays = 0
+		let card_pays = 0
+		let checks = 0
+		let transfers = 0
+
+		let tickets = await Ticket.find({_id: {$in: tickets_ids}}).populate('cash_pays card_pays checks transfers')
+
+		let results = tickets.map(async (ticket) => {
+			ticket.cash_pays.map(p => cash_pays += p.amount)
+			ticket.card_pays.map(p => card_pays += p.amount)
+			ticket.checks.map(p => checks += p.amount)
+			ticket.transfers.map(p => transfers += p.amount)
+		})
+
+	
+		Promise.all(results).then(() => {
+			sendJSONresponse(res, 200, {
+				cash_pays,
+				card_pays,
+				checks,
+				transfers,
+				total: cash_pays + card_pays + checks + transfers
+			})
+		})
+		
+	} catch(e) {
+		return next(e)
+	}
+}
 
 async function boxcut_list (req, res, next) {
 	try {
@@ -57,5 +91,6 @@ async function boxcut_list (req, res, next) {
 module.exports = {
 	boxcut_create,
 	boxcut_list,
-	boxcut_details
+	boxcut_details,
+	boxcut_request
 }

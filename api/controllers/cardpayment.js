@@ -1,5 +1,8 @@
 const sendJSONresponse = require('./shared').sendJSONresponse
 const CardPayment = require('../models/cardpayment')
+const Ticket = require('../models/ticket').ticket
+const calculatePays = require('../utils/calculatepays')
+const Card = require('../models/card')
 
 async function cp_create(req, res, next) {
 	try {
@@ -7,14 +10,22 @@ async function cp_create(req, res, next) {
 		const subsidiary_id = req.params.subsidiary_id
 		const ticket_id = req.params.ticket_id
 
+		let ticket = await Ticket.findById(ticket_id).populate('cash_pays card_pays transfers checks')
+		if (!ticket) throw Error('Ticket not found')
+
 		let card_payment = new CardPayment(req.body)
 		card_payment.user = user._id
 		card_payment.subsidiary = subsidiary_id
 		card_payment.ticket = ticket_id
 
-		card_payment = await card_payment.save()
+		ticket.payed = calculatePays(ticket, card_payment.amount)
 
-		sendJSONresponse(res, 201, card_payment)
+		ticket.card_pays.push(card_payment._id)
+		await ticket.save()
+		card_payment = await card_payment.save()
+		card_payment = await Card.populate(card_payment, {path: 'card'})
+
+		sendJSONresponse(res, 201, {payment: card_payment, payed: ticket.payed})
 	} catch (e) {
 		return next(e)
 	}

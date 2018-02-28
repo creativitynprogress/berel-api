@@ -29,7 +29,7 @@ async function ticket_details(req, res, next) {
   try {
     const ticket_id = req.params.ticket_id
 
-    let ticket = await Ticket.findById(ticket_id).populate('cash_pays cash_pays client')
+    let ticket = await Ticket.findById(ticket_id).populate('cash_pays client').populate({path: 'card_pays', populate: { path: 'card', model: 'Card'}})
 
     sendJSONresponse(res, 200, ticket)
   } catch(e) {
@@ -41,7 +41,7 @@ async function tickets_without_boxcut (req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiaryId
 
-    let tickets = await Ticket.find({subsidiary: subsidiary_id, boxcut: {$eq: null}}).populate('client', 'name')
+    let tickets = await Ticket.find({subsidiary: subsidiary_id, boxcut: {$eq: null}}, '-paints -products -cash_pays -card_pays -transfers -checks -client')
 
     sendJSONresponse(res, 200, tickets)
   } catch (e) {

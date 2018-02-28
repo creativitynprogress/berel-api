@@ -26,6 +26,8 @@ module.exports = (app, io) => {
     const client_controller = require('../controllers/client')
     const card_controller = require('../controllers/card')
 
+    const pb_controller = require('../controllers/purchasebase')
+
     const require_auth = passport.authenticate('jwt', {
         session: false
       })
@@ -82,6 +84,10 @@ module.exports = (app, io) => {
     api_routes.put('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_update)
     api_routes.delete('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_delete)
 
+    //  Purchase Base
+    api_routes.post('/subsidiary/:subsidiary_id/purchase_base', require_auth, pb_controller.pb_create)
+    api_routes.get('/subsidiary/:subsidiary_id/purchase_base', require_auth, pb_controller.pb_list)
+
     api_routes.post('/line/:lineId/range', require_auth, range_controller.range_create)
     api_routes.get('/line/:lineId/range', require_auth, range_controller.range_by_line)
     api_routes.put('/line/:lineId/range/:rangeId', require_auth, range_controller.range_update)
@@ -98,7 +104,7 @@ module.exports = (app, io) => {
     api_routes.put('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_update)
     api_routes.delete('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_delete)
    
-    const upload = multer({   dest: 'uploads/'      })
+    const upload = multer({ dest: 'uploads/' })
     api_routes.post('/excelupload/:lineId', upload.single('file-to-upload'), paints_controller.paints_by_excel ) /// upload file feature
 
     api_routes.post('/product', require_auth, products_controller.product_create)
@@ -124,6 +130,7 @@ module.exports = (app, io) => {
     //  Boxcut
     api_routes.post('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_create)
     api_routes.get('/subsidiary/:subsidiaryId/boxcut', require_auth, boxcut_controller.boxcut_list)
+    api_routes.post('/subsidiary/:subsidiaryId/boxcut/request', require_auth, boxcut_controller.boxcut_request)
     api_routes.get('/subsidiary/:subsidiaryId/boxcut/:boxcutId', require_auth, boxcut_controller.boxcut_details)
 
     //  Client

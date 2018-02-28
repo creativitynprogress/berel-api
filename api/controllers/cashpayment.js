@@ -1,6 +1,7 @@
 const sendJSONresponse = require('./shared').sendJSONresponse
 const CashPayment = require('../models/cashpayment')
 const Ticket = require('../models/ticket').ticket
+const calculatePays = require('../utils/calculatepays')
 
 async function cp_create(req, res, next) {
 	try {
@@ -17,16 +18,7 @@ async function cp_create(req, res, next) {
 		cash_payment.subsidiary = subsidiary_id
 		cash_payment.ticket = ticket_id
 
-		// Esto debe ser una función para ver si se completo el pago de un ticket
-		ticket.cash_pays.map(p => total += p.amount)
-		ticket.card_pays.map(p => total += p.amount)
-		ticket.transfers.map(p => total += p.amount)
-		ticket.checks.map(p => total += p.amount)
-		total += cash_payment.amount
-
-		if (total >= ticket.total) {
-			ticket.payed = true
-		}
+		ticket.payed = calculatePays(ticket, cash_payment.amount)
 
 		ticket.cash_pays.push(cash_payment._id)
 		await ticket.save()
