@@ -9,6 +9,7 @@ const productOwnerSchema = new Schema({
   brand: { type: String, required: true },
   category: { type: String },
   salePrice: { type: Number, required: true },
+  purchasePrice: {type: Number, required: true},
   unit: { type: String, enum: ['SCO25', 'SCO5', 'BL2', 'BL5', 'SCO20', 'GL', 'PZA', 'CB', 'GL']},
   stock : { type: Number, min: 0 }
 }, {

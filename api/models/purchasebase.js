@@ -1,10 +1,15 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const purchaseBaseSchema = new Schema({
+const purchase = new Schema ({
 	base: { type: Schema.Types.ObjectId, ref: 'Base'},
-	subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'},
 	quantity: { type: Number, min: 0},
+	total: { type: Number, required: true }
+})
+
+const purchaseBaseSchema = new Schema({
+	bases: [purchase],
+	subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'},
 	date: { type: Number }
 })
 

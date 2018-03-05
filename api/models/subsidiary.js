@@ -6,7 +6,8 @@ const subsidiarySchema = new Schema({
   address: { type: String, required: true },
   rfc: { type: String },
   text_ticket: { type: String },
-  user: {type: Schema.Types.ObjectId, ref: 'User'}
+  user: {type: Schema.Types.ObjectId, ref: 'User'},
+  subsidiary_number: {type: Number}
 })
 
 module.exports = mongoose.model('Subsidiary', subsidiarySchema)

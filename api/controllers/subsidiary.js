@@ -9,6 +9,9 @@ async function subsidiary_create(req, res, next) {
     let subsidiary = new Subsidiary(req.body)
     subsidiary.user = req.user._id
 
+    let subsidiaries = await Subsidiary.find({user: user._id})
+
+    subsidiary.subsidiary_number = subsidiaries.length + 1
     subsidiary = await subsidiary.save()
 
     sendJSONresponse(res, 201, subsidiary)

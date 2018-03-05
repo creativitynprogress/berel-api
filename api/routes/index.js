@@ -27,6 +27,7 @@ module.exports = (app, io) => {
     const card_controller = require('../controllers/card')
 
     const pb_controller = require('../controllers/purchasebase')
+    const ppo_controller = require('../controllers/purchaseproductowner')
 
     const require_auth = passport.authenticate('jwt', {
         session: false
@@ -87,6 +88,11 @@ module.exports = (app, io) => {
     //  Purchase Base
     api_routes.post('/subsidiary/:subsidiary_id/purchase_base', require_auth, pb_controller.pb_create)
     api_routes.get('/subsidiary/:subsidiary_id/purchase_base', require_auth, pb_controller.pb_list)
+    api_routes.delete('/subsidiary/:subsidiary_id/purchase_base/:pb_id', require_auth, pb_controller.pb_delete)
+
+    //  Purchase Product Owner
+    api_routes.post('/subsidiary/:subsidiary_id/purchase_product_owner', require_auth, ppo_controller.ppo_create)
+    api_routes.get('/subsidiary/:subsidiary_id/purchase_product_owner', require_auth, ppo_controller.ppo_list)
 
     api_routes.post('/line/:lineId/range', require_auth, range_controller.range_create)
     api_routes.get('/line/:lineId/range', require_auth, range_controller.range_by_line)

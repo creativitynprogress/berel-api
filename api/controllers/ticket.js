@@ -4,6 +4,12 @@ const Base = require('../models/base')
 const BaseSubsidiary = require('../models/basesubsidiary')
 const sendJSONresponse = require('./shared').sendJSONresponse
 
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
 async function ticket_list(req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiaryId
@@ -75,6 +81,18 @@ async function ticket_create (req, res, next) {
         })
       })
     })
+
+    let subsidiary = await Subsidiary.findById(subsidiary_id)
+    let number_subsidiary = pad(subsidiary.subsidiary_number, 2)
+
+    let tickets = await Ticket.find({subsidiary: subsidiary_id})
+    let number_tickets = pad(tickets.length, 4)
+
+    ticket.folio = number_subsidiary.toString() + number_tickets.toString()
+
+    if (ticket.invoice.reason) {
+      ticket.invoice.state = 'pending'
+    }
 
     ticket = await ticket.save()
 
