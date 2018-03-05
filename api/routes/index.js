@@ -145,5 +145,5 @@ module.exports = (app, io) => {
     api_routes.put('/client/:clientId', require_auth, client_controller.client_update)
     api_routes.delete('/client/:clientId', require_auth, client_controller.client_delete)
 
-    app.use('/api', api_routes)
+    app.use('/berel/api', api_routes)
 }
