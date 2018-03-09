@@ -25,6 +25,7 @@ module.exports = (app, io) => {
     const boxcut_controller = require('../controllers/boxcut')
     const client_controller = require('../controllers/client')
     const card_controller = require('../controllers/card')
+    const supplier_controller = require('../controllers/supplier')
 
     const pb_controller = require('../controllers/purchasebase')
 
@@ -104,6 +105,7 @@ module.exports = (app, io) => {
     api_routes.put('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_update)
     api_routes.delete('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_delete)
    
+    /// route to create paints BY EXCEL
     const upload = multer({ dest: 'uploads/' })
     api_routes.post('/excelupload/:lineId', upload.single('file-to-upload'), paints_controller.paints_by_excel ) /// upload file feature
 
@@ -138,6 +140,12 @@ module.exports = (app, io) => {
     api_routes.get('/client', require_auth, client_controller.client_list)
     api_routes.put('/client/:clientId', require_auth, client_controller.client_update)
     api_routes.delete('/client/:clientId', require_auth, client_controller.client_delete)
+
+    //supplier
+    api_routes.post('/supplier', require_auth, supplier_controller.supplier_create)
+    api_routes.get('/supplier', require_auth, supplier_controller.supplier_read)
+    api_routes.put('/supplier/:supplierId', require_auth, supplier_controller.supplier_update)
+    api_routes.delete('/supplier/:supplierId', require_auth, supplier_controller.supplier_delete)
 
     app.use('/api', api_routes)
 }
