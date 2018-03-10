@@ -2,6 +2,7 @@ const Ticket = require('../models/ticket').ticket
 const Subsidiary = require('../models/subsidiary')
 const Base = require('../models/base')
 const BaseSubsidiary = require('../models/basesubsidiary')
+const Client = require('../models/client')
 const sendJSONresponse = require('./shared').sendJSONresponse
 
 function pad(n, width, z) {
@@ -35,7 +36,7 @@ async function ticket_details(req, res, next) {
   try {
     const ticket_id = req.params.ticket_id
 
-    let ticket = await Ticket.findById(ticket_id).populate('cash_pays client').populate({path: 'card_pays', populate: { path: 'card', model: 'Card'}})
+    let ticket = await Ticket.findById(ticket_id).populate('cash_pays client checks').populate({path: 'card_pays', populate: { path: 'card', model: 'Card'}})
 
     sendJSONresponse(res, 200, ticket)
   } catch(e) {
@@ -117,10 +118,24 @@ async function ticket_update(req, res, next) {
 }
 
 
+async function tickets_by_clientid(req, res, next) {
+  try {
+    const client_id = req.params.client_id
+
+    let tickets = await Ticket.find({client: client_id})
+    let client = await Client.findById(client_id)
+
+    sendJSONresponse(res, 200, {tickets, client})
+  } catch(e) {
+    return next(e)
+  }
+}
+
 module.exports = {
   ticket_create,
   ticket_update,
   ticket_list,
   tickets_without_boxcut,
-  ticket_details
+  ticket_details,
+  tickets_by_clientid
 }

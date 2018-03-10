@@ -8,7 +8,6 @@ async function cp_create(req, res, next) {
 		const user = req.user
 		const subsidiary_id = req.params.subsidiary_id
 		const ticket_id = req.params.ticket_id
-		let total = 0
 
 		let ticket = await Ticket.findById(ticket_id).populate('cash_pays card_pays transfers checks')
 		if (!ticket) throw Error('Ticket not found')

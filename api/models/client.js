@@ -7,7 +7,8 @@ const clientSchema = new Schema({
 	address: { type: String },
 	email: { type: String },
 	phone: { type: Number },
-	user: { type: Schema.Types.ObjectId, ref: 'User', required: true } 
+	user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+	postal_code: {type: Number} 
 }, {
     timestamps: true,
     versionKey: false
