@@ -143,7 +143,8 @@ module.exports = (app, io) => {
 
     //supplier
     api_routes.post('/supplier', require_auth, supplier_controller.supplier_create)
-    api_routes.get('/supplier', require_auth, supplier_controller.supplier_read)
+    api_routes.get('/supplier/:supplierId', require_auth, supplier_controller.supplier_read_one)
+    api_routes.get('/supplier/', require_auth, supplier_controller.supplier_read)
     api_routes.put('/supplier/:supplierId', require_auth, supplier_controller.supplier_update)
     api_routes.delete('/supplier/:supplierId', require_auth, supplier_controller.supplier_delete)
 
