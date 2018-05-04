@@ -28,7 +28,7 @@ async function base_update(req, res, next) {
 	try {
 		let base_id = req.params.baseId
 
-		let base = await Base.findByIdAndUpdate(base_id, req.body, {new: true})
+		let base = await Base.findByIdAndUpdate(base_id, req.body, {new: true}).populate('line')
 
 		sendJSONresponse(res, 200, base)
 	} catch(e) {

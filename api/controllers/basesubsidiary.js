@@ -51,6 +51,8 @@ async function bs_update(req, res, next) {
 
 		let bs = await BaseSubsidiary.findByIdAndUpdate(bs_id, req.body, {new: true})
 
+		bs = await BaseSubsidiary.populate(bs, {path: 'base', populate: {path: 'line', model: 'Line'}})
+
 		sendJSONresponse(res, 200, bs)
 	} catch(e) {
 		return next(e)

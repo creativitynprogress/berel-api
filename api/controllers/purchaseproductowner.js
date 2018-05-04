@@ -38,7 +38,37 @@ async function ppo_list(req, res, next) {
 	}
 }
 
+async function ppo_delete(req, res, next) {
+	try {
+		const ppo_id = req.params.ppo_id
+
+		let ppo = await PurchaseProductOwner.findByIdAndRemove(ppo_id)
+
+		ppo.products.map(async (p) => {
+			try {
+				let product_owner = await ProductOwner.findById(p.product)
+
+
+				if (product_owner) {
+					product_owner.stock -= p.quantity
+					await product_owner.save()
+				}
+
+			} catch(e) {
+				return next(e)
+			}
+		})
+
+		sendJSONresponse(res, 200, ppo)
+
+
+	} catch (e) {
+		return next(e)
+	}
+}
+
 module.exports = {
 	ppo_create,
-	ppo_list
+	ppo_list,
+	ppo_delete
 }

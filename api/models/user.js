@@ -17,9 +17,12 @@ const userSchema = new Schema({
     enable: {
         type: Boolean
     },
+    subsidiary: {
+        type: Schema.Types.ObjectId, ref: 'Subsidiary'
+    },
     role: {
         type: String,
-        enum: ['Owner', 'Admin'],
+        enum: ['Owner', 'Admin', 'Manager', 'Sales'],
         default: 'Owner'
     }
 }, {

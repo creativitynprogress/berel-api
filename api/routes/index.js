@@ -5,10 +5,13 @@ module.exports = (app, io) => {
     const multer = require('multer');
 
     const authenticathion_controller = require('../controllers/authentication')
+    const user_controller = require('../controllers/user')
     const paints_controller = require('../controllers/paint')
     const products_controller = require('../controllers/product')
     const base_controller = require('../controllers/base')
+    const ink_controller = require('../controllers/ink')
     const bs_controller = require('../controllers/basesubsidiary')
+    const is_controller = require('../controllers/inksubsidiary')
 
     const tickets_controller = require('../controllers/ticket')
     const cash_payment_controller = require('../controllers/cashpayment')
@@ -28,6 +31,7 @@ module.exports = (app, io) => {
 
     const pb_controller = require('../controllers/purchasebase')
     const ppo_controller = require('../controllers/purchaseproductowner')
+    const pi_controller = require('../controllers/purchaseink')
 
     const require_auth = passport.authenticate('jwt', {
         session: false
@@ -49,6 +53,9 @@ module.exports = (app, io) => {
     api_routes.get('/subsidiary', require_auth, subsidiary_controller.subsidiary_list)
     api_routes.put('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_update)
     api_routes.delete('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_delete)
+
+    //  Empleados
+    api_routes.get('/subsidiary/:subsidiary_id/employee', require_auth, user_controller.employees_list)
 
     //  Rangos
     api_routes.post('/subsidiary/:subsidiaryId/line/:lineId/range/:rangeId/sr', require_auth, sr_controller.sr_create)
@@ -74,6 +81,11 @@ module.exports = (app, io) => {
     api_routes.put('/base/:baseId', require_auth, base_controller.base_update)
     api_routes.delete('/base/:baseId', require_auth, base_controller.base_delete)
 
+    //  Tintas (Inks)
+    api_routes.post('/ink', require_auth, ink_controller.ink_create)
+    api_routes.get('/ink', require_auth, ink_controller.ink_list)
+    api_routes.delete('/ink/:ink_id', require_auth, ink_controller.ink_delete)
+
     //  Cards
     api_routes.post('/card', require_auth, card_controller.card_create)
     api_routes.get('/card', require_auth, card_controller.card_list)
@@ -85,14 +97,23 @@ module.exports = (app, io) => {
     api_routes.put('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_update)
     api_routes.delete('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_delete)
 
+    //  InkSubsidiary
+    api_routes.get('/subsidiary/:subsidiary_id/inksubsidiary', require_auth, is_controller.is_list)
+    api_routes.put('/subsidiary/:subsidiary_id/inksubsidiary/:is_id', require_auth, is_controller.is_update)
+
     //  Purchase Base
     api_routes.post('/subsidiary/:subsidiary_id/purchase_base', require_auth, pb_controller.pb_create)
     api_routes.get('/subsidiary/:subsidiary_id/purchase_base', require_auth, pb_controller.pb_list)
     api_routes.delete('/subsidiary/:subsidiary_id/purchase_base/:pb_id', require_auth, pb_controller.pb_delete)
 
+    //  Purchase Ink
+    api_routes.post('/subsidiary/:subsidiary_id/purchase_ink', require_auth, pi_controller.pi_create)
+    api_routes.get('/subsidiary/:subsidiary_id/purchase_ink', require_auth, pi_controller.pi_list)
+
     //  Purchase Product Owner
     api_routes.post('/subsidiary/:subsidiary_id/purchase_product_owner', require_auth, ppo_controller.ppo_create)
     api_routes.get('/subsidiary/:subsidiary_id/purchase_product_owner', require_auth, ppo_controller.ppo_list)
+    api_routes.delete('/subsidiary/:subsidiary_id/purchase_product_owner/:ppo_id', require_auth, ppo_controller.ppo_delete)
 
     api_routes.post('/line/:lineId/range', require_auth, range_controller.range_create)
     api_routes.get('/line/:lineId/range', require_auth, range_controller.range_by_line)
@@ -125,6 +146,8 @@ module.exports = (app, io) => {
     api_routes.post('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_create)
     api_routes.put('/subsidiary/:subsidiaryId/ticket/:ticketId', require_auth, tickets_controller.ticket_update)
     api_routes.get('/ticket/client/:client_id', require_auth, tickets_controller.tickets_by_clientid)
+    api_routes.get('/subsidiary/:subsidiary_id/tickets_to_invoice', require_auth, tickets_controller.tickets_to_invoice)
+    api_routes.put('/ticket/:ticket_id/set_invoiced', require_auth, tickets_controller.ticket_set_invoiced)
 
     //  Cash Payments
     api_routes.post('/subsidiary/:subsidiary_id/ticket/:ticket_id/cash_payment', require_auth, cash_payment_controller.cp_create)

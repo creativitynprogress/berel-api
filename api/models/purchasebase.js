@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const purchase = new Schema ({
 	base: { type: Schema.Types.ObjectId, ref: 'Base'},
-	quantity: { type: Number, min: 0},
+	quantity: { type: Number, min: 1},
 	total: { type: Number, required: true }
 })
 

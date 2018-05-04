@@ -131,11 +131,41 @@ async function tickets_by_clientid(req, res, next) {
   }
 }
 
+async function tickets_to_invoice(req, res, next) {
+  try {
+    const subsidiary_id = req.params.subsidiary_id
+    const state = req.query.state
+
+    let tickets = await Ticket.find({'invoice.state': state, 'subsidiary': subsidiary_id}).populate('client')
+
+    sendJSONresponse(res, 200, tickets)
+  } catch(e) {
+    return next(e)
+  }
+}
+
+async function ticket_set_invoiced (req, res, next) {
+  try {
+    const ticket_id = req.params.ticket_id
+
+    let ticket = await Ticket.findById(ticket_id)
+    ticket.invoice.state = 'invoiced'
+
+    ticket = await ticket.save()
+
+    sendJSONresponse(res, 200, ticket)
+  } catch (e) {
+    return next(e)
+  }
+}
+
 module.exports = {
   ticket_create,
   ticket_update,
   ticket_list,
   tickets_without_boxcut,
   ticket_details,
-  tickets_by_clientid
+  tickets_by_clientid,
+  tickets_to_invoice,
+  ticket_set_invoiced
 }
