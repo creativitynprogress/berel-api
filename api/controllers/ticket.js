@@ -159,6 +159,18 @@ async function ticket_set_invoiced (req, res, next) {
   }
 }
 
+async function incomes_by_month(req, res, next) {
+  try {
+    const subsidiary_id = req.params.subsidiary_id
+
+    let tickets = await Ticket.find({subsidiary: subsidiary_id}, 'total date')
+
+    sendJSONresponse(res, 200, tickets)
+  } catch(e) {
+    return next(e)
+  }
+}
+
 module.exports = {
   ticket_create,
   ticket_update,
@@ -167,5 +179,6 @@ module.exports = {
   ticket_details,
   tickets_by_clientid,
   tickets_to_invoice,
-  ticket_set_invoiced
+  ticket_set_invoiced,
+  incomes_by_month
 }

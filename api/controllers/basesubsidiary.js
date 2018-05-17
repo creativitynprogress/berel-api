@@ -33,6 +33,20 @@ async function bs_list(req, res, next) {
 	}
 }
 
+async function bs_for_sale(req, res, next) {
+	try {
+		const subsidiary_id = req.params.subsidiary_id
+		console.log(subsidiary_id)
+
+		let bs = await BaseSubsidiary.find({subsidiary: subsidiary_id}).populate({path: 'base', populate: {path: 'line', model: 'Line'}})
+		bs = bs.filter(b => b.base.can_sell)
+
+		sendJSONresponse(res, 200, bs)
+	} catch(e) {
+		return next(e)
+	}
+}
+
 async function bs_delete(req, res, next) {
 	try {
 		const bs_id = req.params.bsId
@@ -63,5 +77,6 @@ module.exports = {
 	bs_create,
 	bs_list,
 	bs_delete,
-	bs_update
+	bs_update,
+	bs_for_sale
 }

@@ -93,6 +93,7 @@ module.exports = (app, io) => {
 
     //  BaseSubsidiary
     api_routes.post('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, bs_controller.bs_create)
+    api_routes.get('/subsidiary/:subsidiary_id/basesubsidiary/for_sale', require_auth, bs_controller.bs_for_sale)
     api_routes.get('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, bs_controller.bs_list)
     api_routes.put('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_update)
     api_routes.delete('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_delete)
@@ -148,6 +149,7 @@ module.exports = (app, io) => {
     api_routes.get('/ticket/client/:client_id', require_auth, tickets_controller.tickets_by_clientid)
     api_routes.get('/subsidiary/:subsidiary_id/tickets_to_invoice', require_auth, tickets_controller.tickets_to_invoice)
     api_routes.put('/ticket/:ticket_id/set_invoiced', require_auth, tickets_controller.ticket_set_invoiced)
+    api_routes.get('/subsidiary/:subsidiary_id/incomes_by_month', require_auth, tickets_controller.incomes_by_month)
 
     //  Cash Payments
     api_routes.post('/subsidiary/:subsidiary_id/ticket/:ticket_id/cash_payment', require_auth, cash_payment_controller.cp_create)
