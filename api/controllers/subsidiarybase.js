@@ -1,5 +1,5 @@
 const sendJSONresponse = require('./shared').sendJSONresponse
-const BaseSubsidiary = require('../models/basesubsidiary')
+const BaseSubsidiary = require('../models/subsidiarybase')
 const Base = require('../models/base')
 
 async function bs_create(req, res, next) {
@@ -36,7 +36,6 @@ async function bs_list(req, res, next) {
 async function bs_for_sale(req, res, next) {
 	try {
 		const subsidiary_id = req.params.subsidiary_id
-		console.log(subsidiary_id)
 
 		let bs = await BaseSubsidiary.find({subsidiary: subsidiary_id}).populate({path: 'base', populate: {path: 'line', model: 'Line'}})
 		bs = bs.filter(b => b.base.can_sell)

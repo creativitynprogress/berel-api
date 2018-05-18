@@ -1,6 +1,6 @@
 const sendJSONresponse = require('./shared').sendJSONresponse
 const PurchaseBase = require('../models/purchasebase')
-const BaseSubsidiary = require('../models/basesubsidiary')
+const BaseSubsidiary = require('../models/subsidiarybase')
 const Base = require('../models/base')
 
 async function pb_create(req, res, next) {

@@ -8,7 +8,8 @@ const baseSchema = new Schema({
 	product_id: { type: String, required: true },
 	bar_code: { type: String },
 	price: { type: Number, required: true},
-	can_sell: { type: Boolean, default: false }
+	can_sell: { type: Boolean, default: false },
+	suggestedPrice: { type: Number }
 }, {
     timestamps: true,
     versionKey: false

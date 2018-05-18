@@ -7,7 +7,8 @@ const productSchema = new Schema({
   description: { type: String, required: true },
   category: { type: String },
   suggestedPrice: { type: Number, required: true },
-  unit: { type: String, enum: ['GL', 'CB', 'LT', 'PZA']}
+  unit: { type: String, enum: ['GL', 'CB', 'LT', 'PZA']},
+  price: { type: Number, required: true }
 }, {
     timestamps: true,
     versionKey: false

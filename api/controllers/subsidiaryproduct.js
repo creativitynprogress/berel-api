@@ -37,7 +37,8 @@ async function sp_list(req, res, next) {
 				category: sp.product.category,
 				unit: sp.product.unit,
 				brand: sp.product.brand,
-				suggestedPrice: sp.product.suggestedPrice
+				suggestedPrice: sp.product.suggestedPrice,
+				price: sp.price
 			}
 			return product
 		})
@@ -47,6 +48,7 @@ async function sp_list(req, res, next) {
 				po: po._id,
 				subsidiary: po.subsidiary,
 				salePrice: po.salePrice,
+				price: po.price,
 				stock: po.stock,
 				product_id: po.product_id,
 				description: po.description,

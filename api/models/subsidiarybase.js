@@ -6,7 +6,8 @@ const baseSubsidiarySchema = new Schema({
 	subsidiary: { type: Schema.Types.ObjectId, ref: 'Subsidiary', required: true},
 	stock: { type: Number, min: 0 },
 	min: { type: Number, default: 0},
-	max: { type: Number, default: 100 }
+	max: { type: Number, default: 100 },
+	salePrice: { type: Number }
 })
 
-module.exports = mongoose.model('BaseSubsidiary', baseSubsidiarySchema)
+module.exports = mongoose.model('SubsidiaryBase', baseSubsidiarySchema)

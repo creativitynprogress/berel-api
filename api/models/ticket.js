@@ -11,6 +11,14 @@ const paintItem = new Schema({
     paint: {type: Schema.Types.ObjectId, ref: 'Paint'}
 })
 
+const baseItem = new Schema({
+  line: { type: String },
+  product_id: { type: String },
+  presentation: { type: String },
+  quantity: { type: Number, min: 1 },
+  price: { type: Number }
+})
+
 const productItem = new Schema({
     product_id: {type: String},
     po: { type: String },
@@ -27,6 +35,7 @@ const productItem = new Schema({
 const ticketSchema = new Schema({
     paints: [paintItem],
     products: [productItem],
+    bases: [baseItem],
     cash_pays: [{ type: Schema.Types.ObjectId, ref: 'CashPayment'}],
     card_pays: [{ type: Schema.Types.ObjectId, ref: 'CardPayment'}],
     transfers: [{ type: Schema.Types.ObjectId, ref: 'Transfer'}],

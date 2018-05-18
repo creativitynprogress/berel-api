@@ -10,7 +10,7 @@ module.exports = (app, io) => {
     const products_controller = require('../controllers/product')
     const base_controller = require('../controllers/base')
     const ink_controller = require('../controllers/ink')
-    const bs_controller = require('../controllers/basesubsidiary')
+    const sb_controller = require('../controllers/subsidiarybase')
     const is_controller = require('../controllers/inksubsidiary')
 
     const tickets_controller = require('../controllers/ticket')
@@ -18,7 +18,7 @@ module.exports = (app, io) => {
     const card_payment_controller = require('../controllers/cardpayment')
     const transfer_controller = require('../controllers/transfer')
     const check_controller = require('../controllers/check')
-    
+
     const subsidiary_controller = require('../controllers/subsidiary')
     const line_controller = require('../controllers/line')
     const range_controller = require('../controllers/range')
@@ -92,11 +92,11 @@ module.exports = (app, io) => {
     api_routes.delete('/card/:cardId', require_auth, card_controller.card_delete)
 
     //  BaseSubsidiary
-    api_routes.post('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, bs_controller.bs_create)
-    api_routes.get('/subsidiary/:subsidiary_id/basesubsidiary/for_sale', require_auth, bs_controller.bs_for_sale)
-    api_routes.get('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, bs_controller.bs_list)
-    api_routes.put('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_update)
-    api_routes.delete('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, bs_controller.bs_delete)
+    api_routes.post('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, sb_controller.bs_create)
+    api_routes.get('/subsidiary/:subsidiary_id/basesubsidiary/for_sale', require_auth, sb_controller.bs_for_sale)
+    api_routes.get('/subsidiary/:subsidiaryId/basesubsidiary', require_auth, sb_controller.bs_list)
+    api_routes.put('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, sb_controller.bs_update)
+    api_routes.delete('/subsidiary/:subsidiaryId/basesubsidiary/:bsId', require_auth, sb_controller.bs_delete)
 
     //  InkSubsidiary
     api_routes.get('/subsidiary/:subsidiary_id/inksubsidiary', require_auth, is_controller.is_list)
@@ -131,7 +131,7 @@ module.exports = (app, io) => {
     api_routes.post('/paint/:paintId/presentation', require_auth, paints_controller.presentation_create)
     api_routes.put('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_update)
     api_routes.delete('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_delete)
-   
+
     const upload = multer({ dest: 'uploads/' })
     api_routes.post('/excelupload/:lineId', upload.single('file-to-upload'), paints_controller.paints_by_excel ) /// upload file feature
 

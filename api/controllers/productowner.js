@@ -13,6 +13,7 @@ async function po_create(req, res, next) {
 		let product = {
 			po: product_owner._id,
 			subsidiary: product_owner.subsidiary,
+			price: product_owner.price,
 			salePrice: product_owner.salePrice,
 			stock: product_owner.stock,
 			product_id: product_owner.product_id,

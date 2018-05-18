@@ -1,7 +1,7 @@
 const Ticket = require('../models/ticket').ticket
 const Subsidiary = require('../models/subsidiary')
 const Base = require('../models/base')
-const BaseSubsidiary = require('../models/basesubsidiary')
+const BaseSubsidiary = require('../models/subsidiarybase')
 const Client = require('../models/client')
 const sendJSONresponse = require('./shared').sendJSONresponse
 
