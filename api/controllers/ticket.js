@@ -14,18 +14,45 @@ function pad(n, width, z) {
 async function ticket_list(req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiaryId
-    let today = new Date(Number(req.query.today))
+    let initial = req.query.initial ? Number(req.query.initial) : null
+    let end = req.query.end ? Number(req.query.end) : null
+    let pay_type = req.query.pay_type
+    let specific_card = req.query.specific_card
+    let line = req.query.line
 
-    if (today) {
-      let initial = today.setHours(0, 0, 0)
-      let finish = today.setHours(23, 59, 59)
-
-      let tickets = await Ticket.find({subsidiary: subsidiary_id, date: {$gt: initial, $lt: finish}})
-
-      sendJSONresponse(res, 200, tickets)
+    let query = {
+      subsidiary: subsidiary_id,
+      payed: true
     }
 
-    throw Error('today param is required')
+    if (initial && end) query.date = { $gt: initial, $lt: end }
+    if (pay_type) {
+      switch (pay_type) {
+        case 'cash':
+          query.cash_pays = { $gt: [] }
+          break
+        case 'card':
+          query.card_pays = { $gt: [] }
+          if (specific_card) {
+            query.card_pays = { $elemMatch: {card: specific_card}}
+          }
+          break
+        case 'check':
+          query.checks = { $gt: [] }
+          break;
+      }
+    }
+
+    if (line) {
+      query.$or = [{ bases: {$elemMatch: {line: line}}}, {paints: {$elemMatch: {line: line}}}]
+      //query.paints = { $elemMatch: {line: line}}
+    }
+
+
+    console.log(query)
+    let tickets = await Ticket.find(query).populate('client')
+    //let tickets = await Ticket.find({subsidiary: subsidiary_id, payed: true}).populate('client')
+    sendJSONresponse(res, 200, tickets)
 
   } catch(e) {
     return next(e)
@@ -159,11 +186,20 @@ async function ticket_set_invoiced (req, res, next) {
   }
 }
 
-async function incomes_by_month(req, res, next) {
+async function incomes_by_date(req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiary_id
+    let initial = req.query.initial ? Number(req.query.initial) : null
+    let end = req.query.end ? Number(req.query.end) : null
 
-    let tickets = await Ticket.find({subsidiary: subsidiary_id}, 'total date')
+    let query = {
+      subsidiary: subsidiary_id,
+      payed: true
+    }
+
+    if (initial && end) query.date = { $gt: initial, $lt: end }
+
+    let tickets = await Ticket.find(query, 'total date')
 
     sendJSONresponse(res, 200, tickets)
   } catch(e) {
@@ -180,5 +216,5 @@ module.exports = {
   tickets_by_clientid,
   tickets_to_invoice,
   ticket_set_invoiced,
-  incomes_by_month
+  incomes_by_date
 }

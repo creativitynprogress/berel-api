@@ -9,7 +9,7 @@ const paintItem = new Schema({
     quantity: {type: Number, min: 1},
     price: {type: Number},
     paint: {type: Schema.Types.ObjectId, ref: 'Paint'}
-})
+}, { usePushEach: true })
 
 const baseItem = new Schema({
   line: { type: String },
@@ -17,7 +17,7 @@ const baseItem = new Schema({
   presentation: { type: String },
   quantity: { type: Number, min: 1 },
   price: { type: Number }
-})
+}, { usePushEach: true })
 
 const productItem = new Schema({
     product_id: {type: String},
@@ -29,7 +29,7 @@ const productItem = new Schema({
     description: { type: String },
     brand: { type: String },
     price: { type: Number }
-})
+}, { usePushEach: true })
 
 
 const ticketSchema = new Schema({
@@ -57,7 +57,8 @@ const ticketSchema = new Schema({
     folio: { type: String, required: true}
 }, {
     timestamps: true,
-    versionKey: false
+    versionKey: false,
+    usePushEach: true
 })
 
 module.exports = {
