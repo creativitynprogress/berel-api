@@ -59,6 +59,73 @@ async function ticket_list(req, res, next) {
   }
 }
 
+async function ticket_sales (req, res, next) {
+  try {
+    const subsidiary_id = req.params.subsidiary_id
+
+    let tickets = await Ticket.find({subsidiary: subsidiary_id, payed: true})
+
+    let sales = []
+
+    tickets.map(t => {
+      let pay_type = []
+
+      if (t.cash_pays.length > 0) pay_type.push('Efectivo')
+      if (t.card_pays.length > 0) pay_type.push('Tarjeta')
+      if (t.transfers.length > 0) pay_type.push('Transferencia')
+      if (t.checks.length > 0) pay_type.push('Cheque')
+
+      t.products.map(p => {
+        let sale = {
+          product_id: p.product_id,
+          quantity: p.quantity,
+          price: p.price,
+          folio: t.folio,
+          date: t.date,
+          pay_type: pay_type,
+          card_pays: t.card_pays
+        }
+
+        sales.push(sale)
+      })
+
+      t.bases.map(b => {
+        let sale = {
+          product_id: b.product_id,
+          quantity: b.quantity,
+          price: b.price,
+          folio: t.folio,
+          date: t.date,
+          line: b.line,
+          pay_type: pay_type,
+          card_pays: t.card_pays
+        }
+
+        sales.push(sale)
+      })
+
+      t.paints.map(p => {
+        let sale = {
+          product_id: p.color,
+          quantity: p.quantity,
+          line: p.line,
+          price: p.price,
+          folio: t.folio,
+          date: t.date,
+          pay_type: pay_type,
+          card_pays: t.card_pays
+        }
+
+        sales.push(sale)
+      })
+    })
+
+    sendJSONresponse(res, 200, sales)
+  } catch (e) {
+    return next(e)
+  }
+}
+
 async function ticket_details(req, res, next) {
   try {
     const ticket_id = req.params.ticket_id
@@ -96,17 +163,19 @@ async function ticket_create (req, res, next) {
       Base.find({line: p.paint.line}, 'presentation', (err, bases) => {
         if (err) throw Error(err.message)
         let base = bases.find(b => b.presentation === p.presentation)
-        BaseSubsidiary.findOne({base: base._id}, (err, bs) => {
-          if (bs) {
-            if (bs.stock > 0 && bs.stock > p.quantity) {
-              bs.stock = bs.stock - p.quantity
-              bs.save()
-            } else {
-              bs.stock = 0
-              bs.save()
+        if (base) {
+          BaseSubsidiary.findOne({base: base._id}, (err, bs) => {
+            if (bs) {
+              if (bs.stock > 0 && bs.stock > p.quantity) {
+                bs.stock = bs.stock - p.quantity
+                bs.save()
+              } else {
+                bs.stock = 0
+                bs.save()
+              }
             }
-          }
-        })
+          })
+        }
       })
     })
 
@@ -216,5 +285,6 @@ module.exports = {
   tickets_by_clientid,
   tickets_to_invoice,
   ticket_set_invoiced,
-  incomes_by_date
+  incomes_by_date,
+  ticket_sales
 }

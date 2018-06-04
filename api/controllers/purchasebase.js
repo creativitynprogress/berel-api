@@ -1,16 +1,18 @@
 const sendJSONresponse = require('./shared').sendJSONresponse
 const PurchaseBase = require('../models/purchasebase')
 const BaseSubsidiary = require('../models/subsidiarybase')
+const InkSubsidiary = require('../models/inksubsidiary')
 const Base = require('../models/base')
+const Ink = require('../models/ink')
 
 async function pb_create(req, res, next) {
 	try {
 		const subsidiary_id = req.params.subsidiary_id
 
-		let purchase_base = new PurchaseBase(req.body)
-		purchase_base.subsidiary = subsidiary_id
+		let purchase = new PurchaseBase(req.body)
+		purchase.subsidiary = subsidiary_id
 
-		purchase_base.bases.map(async (p) => {
+		purchase.bases.map(async (p) => {
 			try {
 				let base_subsidiary = await BaseSubsidiary.findOne({subsidiary: subsidiary_id, base: p.base})
 				if (!base_subsidiary) {
@@ -27,10 +29,29 @@ async function pb_create(req, res, next) {
 			}
 		})
 
-		purchase_base = await purchase_base.save()
-		purchase_base = await Base.populate(purchase_base, 'bases.base')
+		purchase.inks.map(async (p) => {
+			try {
+				let ink_subsidiary = await InkSubsidiary.findOne({subsidiary: subsidiary_id, ink: p.ink})
+				if (!ink_subsidiary) {
+					let ink_subsidiary = new InkSubsidiary({ink: p.ink, subsidiary: subsidiary_id, stock: p.quantity})
 
-		sendJSONresponse(res, 201, purchase_base)
+					await ink_subsidiary.save()
+				} else {
+					ink_subsidiary.stock += p.quantity
+					await ink_subsidiary.save()
+				}
+
+			} catch(e) {
+				return next(e)
+			}
+		})
+
+
+		purchase = await purchase.save()
+		purchase = await Base.populate(purchase, 'bases.base')
+		purchase = await Ink.populate(purchase, 'inks.ink')
+
+		sendJSONresponse(res, 201, purchase)
 	} catch(e) {
 		return next(e)
 	}
@@ -40,7 +61,7 @@ async function pb_list(req, res, next) {
 	try {
 		const subsidiary_id = req.params.subsidiary_id
 
-		let purchases_base = await PurchaseBase.find({subsidiary: subsidiary_id}).populate('bases.base')
+		let purchases_base = await PurchaseBase.find({subsidiary: subsidiary_id}).populate('bases.base inks.ink')
 
 		sendJSONresponse(res, 200, purchases_base)
 	} catch(e) {

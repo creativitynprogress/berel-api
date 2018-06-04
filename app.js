@@ -14,6 +14,7 @@ const router = require('./api/routes/index')
 const chalk = require('chalk')
 const http = require('http')
 const cors = require('cors')
+const compression = require('compression');
 
 const server = http.createServer(app)
 const io = require('socket.io')(server)
@@ -27,6 +28,7 @@ mongoose.connect(config.database, {
   useMongoClient: true
 })
 
+app.use(compression())
 app.use(bodyParser.json({
   limit: '4mb'
 }))

@@ -6,7 +6,8 @@ const sendJSONresponse = require('./shared').sendJSONresponse
 const excelReader = require('../utils/excelReader')
 const multer = require('multer')
 const fs = require('fs')
-const path = require('path');
+const path = require('path')
+
 async function paint_create(req, res, next) {
     try {
         const user = req.user
@@ -14,6 +15,7 @@ async function paint_create(req, res, next) {
         let paint = new Paint(req.body)
         paint = await paint.save()
         paint = await Paint.populate(paint, 'line range')
+        
         sendJSONresponse(res, 201, paint)
     } catch(e) {
         return next(e)
@@ -135,7 +137,7 @@ async function paint_list(req, res, next) {
         if (lineId) {
             paints = await Paint.find(
             {
-                line: lineId, 
+                line: lineId,
                 $or: [{user: user._id}, {user: {$exists: false}}]
             }, '-presentations').populate('line range')
         } else {

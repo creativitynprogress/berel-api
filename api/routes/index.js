@@ -28,6 +28,7 @@ module.exports = (app, io) => {
     const boxcut_controller = require('../controllers/boxcut')
     const client_controller = require('../controllers/client')
     const card_controller = require('../controllers/card')
+    const provider_controller = require('../controllers/provider')
 
     const pb_controller = require('../controllers/purchasebase')
     const ppo_controller = require('../controllers/purchaseproductowner')
@@ -53,6 +54,10 @@ module.exports = (app, io) => {
     api_routes.get('/subsidiary', require_auth, subsidiary_controller.subsidiary_list)
     api_routes.put('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_update)
     api_routes.delete('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_delete)
+
+    //  Provider
+    api_routes.post('/provider', require_auth, provider_controller.provider_create)
+    api_routes.get('/provider', require_auth, provider_controller.provider_list)
 
     //  Empleados
     api_routes.get('/subsidiary/:subsidiary_id/employee', require_auth, user_controller.employees_list)
@@ -142,6 +147,7 @@ module.exports = (app, io) => {
 
     //  Ticket
     api_routes.get('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_list)
+    api_routes.get('/subsidiary/:subsidiary_id/sales', require_auth, tickets_controller.ticket_sales)
     api_routes.get('/subsidiary/:subsidiaryId/ticket/noboxcut', require_auth, tickets_controller.tickets_without_boxcut)
     api_routes.get('/ticket/:ticket_id', require_auth, tickets_controller.ticket_details)
     api_routes.post('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_create)
