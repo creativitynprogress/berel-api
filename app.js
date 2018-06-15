@@ -7,10 +7,10 @@ const logger = require('morgan')
 const helmet = require('helmet')
 const port = process.env.PORT || 3020
 const mongoose = require('mongoose')
-const config = require('./api/config/db')
-const options = require('./api/config/config')
+const config = require('./config/db')
+const options = require('./config/config')
 const passport = require('passport')
-const router = require('./api/routes/index')
+const router = require('./routes/index')
 const chalk = require('chalk')
 const http = require('http')
 const cors = require('cors')
@@ -36,11 +36,11 @@ app.use(bodyParser.urlencoded({
   extended: false,
   limit: '4mb'
 }))
+
 app.use(cookieParser())
 app.use(cors())
 app.use(logger('dev'))
 app.use(helmet())
-
 app.use(passport.initialize())
 
 function handleFatalError(err) {
@@ -49,6 +49,7 @@ function handleFatalError(err) {
   process.exit(1)
 }
 
+/*
 app.use(express.static(path.join(__dirname, 'dist')))
 app.get('/index', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'))
@@ -56,16 +57,15 @@ app.get('/index', (req, res) => {
 app.get('/upload', (req, res) => {
   res.sendFile(__dirname + '/views/upload.html');
 });
+*/
 
+process.on('unhandledRejection', handleFatalError)
 
-if (!module.parent) {
-  process.on('unhandledRejection', handleFatalError)
+server.listen(port, () => {
+  console.log(`${chalk.green('[berel-api]')} server listening on port ${port}`)
+})
 
-  server.listen(port, () => {
-    console.log(`${chalk.green('[berel-api]')} server listening on port ${port}`)
-  })
-
-  router(app, io)
+router(app, io)
 
   app.use((err, req, res, next) => {
   if (err.message.match(/not found/)) {
@@ -77,4 +77,3 @@ if (!module.parent) {
     error: err.message
   })
 })
-}

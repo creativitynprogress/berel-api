@@ -1,5 +1,6 @@
 const sendJSONresponse = require('./shared').sendJSONresponse
 const Card = require('../models/card')
+const Subsidiary = require('../models/subsidiary')
 
 async function card_create(req, res, next) {
 	try {
@@ -19,8 +20,16 @@ async function card_create(req, res, next) {
 async function card_list(req, res, next) {
 	try {
 		const user = req.user
+		let cards = []
 
-		let cards = await Card.find({user: user._id})
+		if (user.role == 'Owner') {
+			cards = await Card.find({user: user._id})
+		} else {
+			let subsidiary = await Subsidiary.findById(user.subsidiary)
+
+			cards = await Card.find({user: subsidiary.user})
+		}
+
 
 		sendJSONresponse(res, 200, cards)
 	} catch(e) {

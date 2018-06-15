@@ -38,7 +38,9 @@ async function sp_list(req, res, next) {
 				unit: sp.product.unit,
 				brand: sp.product.brand,
 				suggestedPrice: sp.product.suggestedPrice,
-				price: sp.price
+				price: sp.price,
+				min: sp.min,
+				max: sp.max
 			}
 			return product
 		})
@@ -55,7 +57,9 @@ async function sp_list(req, res, next) {
 				bar_code: po.bar_code,
 				category: po.category,
 				unit: po.unit,
-				brand: po.brand
+				brand: po.brand,
+				min: po.min,
+				max: po.max
 			}
 
 			products_response.push(product)

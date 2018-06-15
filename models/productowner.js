@@ -11,7 +11,9 @@ const productOwnerSchema = new Schema({
   salePrice: { type: Number, required: true },
   price: {type: Number, required: true},
   unit: { type: String, enum: ['SCO25', 'SCO5', 'BL2', 'BL5', 'SCO20', 'GL', 'PZA', 'CB', 'GL']},
-  stock : { type: Number, min: 0 }
+  stock : { type: Number, min: 0 },
+  min: { type: Number, default: 0 },
+  max: { type: Number, default: 100 }
 }, {
     timestamps: true,
     versionKey: false

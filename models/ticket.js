@@ -36,6 +36,7 @@ const ticketSchema = new Schema({
     paints: [paintItem],
     products: [productItem],
     bases: [baseItem],
+    seller: { type: Schema.Types.ObjectId, ref: 'User'},
     cash_pays: [{ type: Schema.Types.ObjectId, ref: 'CashPayment'}],
     card_pays: [{ type: Schema.Types.ObjectId, ref: 'CardPayment'}],
     transfers: [{ type: Schema.Types.ObjectId, ref: 'Transfer'}],

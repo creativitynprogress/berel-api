@@ -1,5 +1,6 @@
 const sendJSONresponse = require('./shared').sendJSONresponse
 const Client = require('../models/client')
+const Subsidiary = require('../models/subsidiary')
 
 async function client_create(req, res, next) {
 	try {
@@ -19,8 +20,15 @@ async function client_create(req, res, next) {
 async function client_list(req, res, next) {
 	try {
 		const user = req.user
+		let clients = []
 
-		let clients = await Client.find({user: user._id})
+		if (user.role == 'Admin') {
+			clients = await Client.find({user: user._id})
+		} else {
+			let subsidiary = await Subsidiary.findById(user.subsidiary)
+			clients = await Client.find({user: subsidiary.user})
+		}
+
 
 		sendJSONresponse(res, 200, clients)
 	} catch(e) {

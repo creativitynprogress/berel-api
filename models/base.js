@@ -9,7 +9,9 @@ const baseSchema = new Schema({
 	bar_code: { type: String },
 	price: { type: Number, required: true},
 	can_sell: { type: Boolean, default: false },
-	suggestedPrice: { type: Number }
+	//Quizas no se use suggestedPrice
+	suggestedPrice: { type: Number },
+	description: { type: String }
 }, {
     timestamps: true,
     versionKey: false

@@ -21,7 +21,9 @@ async function po_create(req, res, next) {
 			bar_code: product_owner.bar_code,
 			category: product_owner.category,
 			unit: product_owner.unit,
-			brand: product_owner.brand
+			brand: product_owner.brand,
+			min: product_owner.min,
+			max: product_owner.max
 		}
 
 		sendJSONresponse(res, 201, product)

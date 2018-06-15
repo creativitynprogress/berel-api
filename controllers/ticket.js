@@ -130,7 +130,7 @@ async function ticket_details(req, res, next) {
   try {
     const ticket_id = req.params.ticket_id
 
-    let ticket = await Ticket.findById(ticket_id).populate('cash_pays client checks').populate({path: 'card_pays', populate: { path: 'card', model: 'Card'}})
+    let ticket = await Ticket.findById(ticket_id).populate('cash_pays client checks seller').populate({path: 'card_pays', populate: { path: 'card', model: 'Card'}})
 
     sendJSONresponse(res, 200, ticket)
   } catch(e) {
