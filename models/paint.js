@@ -5,12 +5,12 @@ const elementSchema = new Schema({
     ink: { type: String, required: true },
     ounce: { type: Number },
     ouncePart: { type: Number }
-})
+}, { usePushEach: true })
 
 const presentationSchema = new Schema({
   name: { type: String, enum: ['1L', '4L', '19L'] },
   elements: [elementSchema]
-})
+}, { usePushEach: true })
 
 const paintSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User' },
@@ -22,7 +22,8 @@ const paintSchema = new Schema({
     enable: { type: Boolean, default: true }
 }, {
     timestamps: true,
-    versionKey: false
+    versionKey: false,
+    usePushEach: true
 })
 
 module.exports = mongoose.model('Paint', paintSchema)
