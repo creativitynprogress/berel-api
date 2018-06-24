@@ -43,9 +43,15 @@ module.exports = (app, io) => {
     const api_routes = express.Router()
     const auth_routes = express.Router()
 
-    api_routes.use('/auth', auth_routes)
+    api_routes.use('/auth/bcode', auth_routes)
     auth_routes.post('/register', authenticathion_controller.register)
     auth_routes.post('/login', require_login, authenticathion_controller.login)
+
+    //  User
+    api_routes.put('/user', require_auth, user_controller.user_update
+
+
+  )
 
     api_routes.post('/subsidiary', require_auth, subsidiary_controller.subsidiary_create)
     api_routes.get('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_details)

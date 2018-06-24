@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-    name: {
+    full_name: {
         type: String
     },
     email: {
@@ -14,16 +14,22 @@ const userSchema = new Schema({
     password: {
         type: String
     },
+    address: {
+        type: String
+    },
+    city: {
+        type: String
+    },
+    phone_number: {
+        type: String
+    },
     enable: {
         type: Boolean
     },
-    subsidiary: {
-        type: Schema.Types.ObjectId, ref: 'Subsidiary'
-    },
     role: {
         type: String,
-        enum: ['Owner', 'Admin', 'Manager', 'Sales'],
-        default: 'Owner'
+        enum: ['User', 'Admin'],
+        default: 'User'
     }
 }, {
     timestamps: true,

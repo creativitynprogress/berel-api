@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const helmet = require('helmet')
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3020
 const mongoose = require('mongoose')
 const config = require('./config/db')
 const passport = require('passport')
@@ -26,6 +26,8 @@ mongoose.Promise = require('bluebird')
 mongoose.connect(config.database, {
   useMongoClient: true
 })
+
+app.set('view engine', 'ejs')
 
 app.use(compression())
 app.use(bodyParser.json({

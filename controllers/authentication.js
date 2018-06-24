@@ -1,10 +1,10 @@
 'use strict'
 
 const jwt = require('jsonwebtoken')
-const crypto = require('crypto')
 const User = require('../models/user')
 const config = require('../config/config')
 const sendJSONresponse = require('./shared').sendJSONresponse
+const mailer = require('../utils/email')
 
 function generateToken(user) {
     return jwt.sign(user, config.secret, {})
@@ -14,9 +14,11 @@ function setUserInfo(user) {
     const userInfo = {
         _id: user._id,
         email: user.email,
-        name: user.name,
-        role: user.role,
-        subsidiary: user.subsidiary
+        full_name: user.full_name,
+        address: user.address,
+        city: user.city,
+        phone_number: user.phone_number,
+        role: user.role
     }
 
     return userInfo
@@ -42,7 +44,8 @@ async function register(req, res, next) {
 
         let user = new User(req.body)
 
-        user = await user.save()
+        //user = await user.save()
+        mailer.send_welcome(user.email, user.full_name)
         let userInfo = setUserInfo(user)
 
         sendJSONresponse(res, 200, {
