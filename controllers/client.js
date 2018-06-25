@@ -7,7 +7,13 @@ async function client_create(req, res, next) {
 		const user = req.user
 
 		let client = new Client(req.body)
-		client.user = user._id
+
+		if (user.role === 'User') {
+			client.user = user._id
+		} else {
+			let subsidiary = await Subsidiary.findById(user.subsidiary)
+			client.user = subsidiary.user
+		}
 
 		client = await client.save()
 
@@ -22,7 +28,7 @@ async function client_list(req, res, next) {
 		const user = req.user
 		let clients = []
 
-		if (user.role == 'Admin') {
+		if (user.role == 'User') {
 			clients = await Client.find({user: user._id})
 		} else {
 			let subsidiary = await Subsidiary.findById(user.subsidiary)

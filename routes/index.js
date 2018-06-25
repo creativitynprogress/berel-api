@@ -1,12 +1,11 @@
 module.exports = (app, io) => {
     const express = require('express')
-    const passportService = require('../config/passport')
-    const passport = require('passport')
-    const multer = require('multer');
+    const require_auth = require('../middlewares/auth').require_auth
+    const require_login = require('../middlewares/auth').require_login
 
     const authenticathion_controller = require('../controllers/authentication')
     const user_controller = require('../controllers/user')
-    const paints_controller = require('../controllers/paint')
+    const employee_controller = require('../controllers/employee')
     const products_controller = require('../controllers/product')
     const base_controller = require('../controllers/base')
     const ink_controller = require('../controllers/ink')
@@ -32,26 +31,23 @@ module.exports = (app, io) => {
 
     const purchase_controller = require('../controllers/purchase')
 
-    const require_auth = passport.authenticate('jwt', {
-        session: false
-      })
-
-    const require_login = passport.authenticate('local', {
-        session: false
-    })
-
     const api_routes = express.Router()
     const auth_routes = express.Router()
+    const paint_routes = require('./paint')
 
-    api_routes.use('/auth/bcode', auth_routes)
+    api_routes.use('/paint', paint_routes)
+
+    api_routes.use('/auth', auth_routes)
     auth_routes.post('/register', authenticathion_controller.register)
     auth_routes.post('/login', require_login, authenticathion_controller.login)
 
     //  User
-    api_routes.put('/user', require_auth, user_controller.user_update
+    api_routes.put('/user', require_auth, user_controller.user_update)
 
-
-  )
+    //  Employee
+    api_routes.post('/subsidiary/:subsidiary_id/employee', require_auth, employee_controller.employee_create)
+    api_routes.get('/subsidiary/:subsidiary_id/employee', require_auth, employee_controller.employee_list)
+    api_routes.put('/subsidiary/:subsidiary_id/employee/employee_id', require_auth, employee_controller.employee_update)
 
     api_routes.post('/subsidiary', require_auth, subsidiary_controller.subsidiary_create)
     api_routes.get('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_details)
@@ -62,9 +58,6 @@ module.exports = (app, io) => {
     //  Provider
     api_routes.post('/provider', require_auth, provider_controller.provider_create)
     api_routes.get('/provider', require_auth, provider_controller.provider_list)
-
-    //  Empleados
-    api_routes.get('/subsidiary/:subsidiary_id/employee', require_auth, user_controller.employees_list)
 
     //  Rangos
     api_routes.post('/subsidiary/:subsidiaryId/line/:lineId/range/:rangeId/sr', require_auth, sr_controller.sr_create)
@@ -122,35 +115,22 @@ module.exports = (app, io) => {
     api_routes.put('/line/:lineId/range/:rangeId', require_auth, range_controller.range_update)
     api_routes.delete('/line/:lineId/range/:rangeId', require_auth, range_controller.range_delete)
 
-    api_routes.post('/paint', require_auth, paints_controller.paint_create)
-    api_routes.get('/paint', require_auth, paints_controller.paint_list)
-    api_routes.get('/paint/owner', require_auth, paints_controller.paint_owner_list)
-    api_routes.get('/paint/:paintId', require_auth, paints_controller.paint_details)
-    api_routes.get('/paint/user/:paintId', require_auth, paints_controller.paint_details_for_users)
-    api_routes.put('/paint/:paintId', require_auth, paints_controller.paint_update)
-    api_routes.delete('/paint/:paintId', require_auth, paints_controller.paint_delete)
-    api_routes.post('/paint/:paintId/presentation', require_auth, paints_controller.presentation_create)
-    api_routes.put('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_update)
-    api_routes.delete('/paint/:paintId/presentation/:presentationId', require_auth, paints_controller.presentation_delete)
-
-    const upload = multer({ dest: 'uploads/' })
-    api_routes.post('/excelupload/:lineId', upload.single('file-to-upload'), paints_controller.paints_by_excel ) /// upload file feature
-
     api_routes.post('/product', require_auth, products_controller.product_create)
     api_routes.get('/product', require_auth, products_controller.product_list)
     api_routes.put('/product/:productId', require_auth, products_controller.product_update)
     api_routes.delete('/product/:productId', require_auth, products_controller.product_delete)
 
     //  Ticket
-    api_routes.get('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_list)
-    api_routes.get('/subsidiary/:subsidiary_id/sales', require_auth, tickets_controller.ticket_sales)
-    api_routes.get('/subsidiary/:subsidiaryId/ticket/noboxcut', require_auth, tickets_controller.tickets_without_boxcut)
     api_routes.get('/ticket/:ticket_id', require_auth, tickets_controller.ticket_details)
-    api_routes.post('/subsidiary/:subsidiaryId/ticket', require_auth, tickets_controller.ticket_create)
-    api_routes.put('/subsidiary/:subsidiaryId/ticket/:ticketId', require_auth, tickets_controller.ticket_update)
     api_routes.get('/ticket/client/:client_id', require_auth, tickets_controller.tickets_by_clientid)
-    api_routes.get('/subsidiary/:subsidiary_id/tickets_to_invoice', require_auth, tickets_controller.tickets_to_invoice)
     api_routes.put('/ticket/:ticket_id/set_invoiced', require_auth, tickets_controller.ticket_set_invoiced)
+
+    api_routes.get('/subsidiary/:subsidiary_id/ticket', require_auth, tickets_controller.ticket_list)
+    api_routes.get('/subsidiary/:subsidiary_id/sales', require_auth, tickets_controller.ticket_sales)
+    api_routes.get('/subsidiary/:subsidiary_id/ticket/noboxcut', require_auth, tickets_controller.tickets_without_boxcut)
+    api_routes.post('/subsidiary/:subsidiary_id/ticket', require_auth, tickets_controller.ticket_create)
+    api_routes.put('/subsidiary/:subsidiary_id/ticket/:ticket_id', require_auth, tickets_controller.ticket_update)
+    api_routes.get('/subsidiary/:subsidiary_id/tickets_to_invoice', require_auth, tickets_controller.tickets_to_invoice)
     api_routes.get('/subsidiary/:subsidiary_id/incomes_by_date', require_auth, tickets_controller.incomes_by_date)
 
     //  Cash Payments

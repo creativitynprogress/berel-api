@@ -3,18 +3,13 @@ const bcrypt = require('bcrypt')
 const Schema = mongoose.Schema
 
 const employeeSchema = new Schema({
-    name: {
+    full_name: {
         type: String
     },
     email: {
         type: String,
         unique: true,
         required: true
-    },
-    username: {
-        type: String,
-        required: true,
-        unique: true
     },
     password: {
         type: String

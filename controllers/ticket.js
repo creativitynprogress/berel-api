@@ -13,7 +13,7 @@ function pad(n, width, z) {
 
 async function ticket_list(req, res, next) {
   try {
-    const subsidiary_id = req.params.subsidiaryId
+    const subsidiary_id = req.params.subsidiary_id
     let initial = req.query.initial ? Number(req.query.initial) : null
     let end = req.query.end ? Number(req.query.end) : null
     let pay_type = req.query.pay_type
@@ -51,7 +51,6 @@ async function ticket_list(req, res, next) {
 
     console.log(query)
     let tickets = await Ticket.find(query).populate('client')
-    //let tickets = await Ticket.find({subsidiary: subsidiary_id, payed: true}).populate('client')
     sendJSONresponse(res, 200, tickets)
 
   } catch(e) {
@@ -142,7 +141,7 @@ async function ticket_details(req, res, next) {
 
 async function tickets_without_boxcut (req, res, next) {
   try {
-    const subsidiary_id = req.params.subsidiaryId
+    const subsidiary_id = req.params.subsidiary_id
 
     let tickets = await Ticket.find({subsidiary: subsidiary_id, boxcut: {$eq: null}}, '-paints -products -cash_pays -card_pays -transfers -checks -client')
 
@@ -154,7 +153,7 @@ async function tickets_without_boxcut (req, res, next) {
 
 async function ticket_create (req, res, next) {
   try {
-    const subsidiary_id = req.params.subsidiaryId
+    const subsidiary_id = req.params.subsidiary_id
 
     let ticket = new Ticket(req.body)
     ticket.subsidiary = subsidiary_id
@@ -205,7 +204,7 @@ async function ticket_create (req, res, next) {
 
 async function ticket_update(req, res, next) {
   try {
-    const ticket_id = req.params.ticketId
+    const ticket_id = req.params.ticket_id
 
     let ticket = await Ticket.findByIdAndUpdate(ticket_id, req.body, { new: true })
 

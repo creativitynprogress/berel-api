@@ -18,7 +18,8 @@ function setUserInfo(user) {
         address: user.address,
         city: user.city,
         phone_number: user.phone_number,
-        role: user.role
+        role: user.role,
+        subsidiary: user.subsidiary
     }
 
     return userInfo

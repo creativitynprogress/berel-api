@@ -4,14 +4,11 @@ const Paint = require('../models/paint')
 const SubsidiaryRange = require('../models/subsidiaryrange')
 const sendJSONresponse = require('./shared').sendJSONresponse
 const excelReader = require('../utils/excelReader')
-const multer = require('multer')
 const fs = require('fs')
 const path = require('path')
 
 async function paint_create(req, res, next) {
     try {
-        const user = req.user
-
         let paint = new Paint(req.body)
         paint = await paint.save()
         paint = await Paint.populate(paint, 'line range')
@@ -24,7 +21,7 @@ async function paint_create(req, res, next) {
 
 async function paint_details(req, res, next) {
     try {
-        const paint_id = req.params.paintId
+        const paint_id = req.params.paint_id
 
         const paint = await Paint.findById(paint_id).populate('line range')
 
@@ -36,7 +33,7 @@ async function paint_details(req, res, next) {
 
 async function paint_details_for_users(req, res, next) {
   try {
-    const paint_id = req.params.paintId
+    const paint_id = req.params.paint_id
 
     let paint = await Paint.findById(paint_id).populate('line range')
     let sr = await SubsidiaryRange.findOne({range: paint.range._id})
@@ -103,7 +100,7 @@ async function paint_details_for_users(req, res, next) {
 
 async function paint_update(req, res, next) {
     try {
-        const paint_id = req.params.paintId
+        const paint_id = req.params.paint_id
 
         let paint = await Paint.findById(paint_id)
 
@@ -118,7 +115,7 @@ async function paint_update(req, res, next) {
 
 async function paint_delete(req, res, next) {
     try {
-        const paint_id = req.params.paintId
+        const paint_id = req.params.paint_id
 
         let paint = await Paint.findByIdAndRemove(paint_id)
 
@@ -164,7 +161,7 @@ async function paint_owner_list(req, res, next) {
 
 async function presentation_create(req, res, next) {
   try {
-    const paint_id = req.params.paintId
+    const paint_id = req.params.paint_id
     const name = req.body.name
     const base = req.body.base
     const elements = req.body.elements
@@ -193,8 +190,8 @@ async function presentation_create(req, res, next) {
 
 async function presentation_update(req, res, next) {
   try {
-    const presentation_id = req.params.presentationId
-    const paint_id = req.params.paintId
+    const presentation_id = req.params.presentation_id
+    const paint_id = req.params.paint_id
     const name = req.body.name
     const base = req.body.base
     const elements = req.body.elements
@@ -217,8 +214,8 @@ async function presentation_update(req, res, next) {
 
 async function presentation_delete(req, res, next) {
   try {
-    const paint_id = req.params.paintId
-    const presentation_id = req.params.presentationId
+    const paint_id = req.params.paint_id
+    const presentation_id = req.params.presentation_id
 
     let paint = await Paint.findById(paint_id)
     if (!paint) throw Error('Paint not found')
@@ -240,7 +237,7 @@ async function presentation_delete(req, res, next) {
 
 async function paints_by_excel(req, res, next) {
     try {
-         let lineId = req.params.lineId
+         let lineId = req.params.line_id
          let filename =req.file.filename
          console.log(req.file)
          let smthng = await  excelReader.saveExcel(req,res,lineId,filename)

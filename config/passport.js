@@ -1,6 +1,7 @@
-const passport = require("passport");
-const User = require("../models/user");
-const config = require("./config");
+const passport = require("passport")
+const User = require("../models/user")
+const Employee = require('../models/employee')
+const config = require("./config")
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const LocalStrategy = require("passport-local");
@@ -11,42 +12,41 @@ const localOptions = {
 };
 
 // Setting up local login Strategy
-const localLogin = new LocalStrategy(localOptions, function(
-  email,
-  password,
-  done
-) {
-  User.findOne(
-    {
-      email: email
-    },
-    function(err, user) {
-      if (err) {
-        return done(err);
-      }
+const localLogin = new LocalStrategy(localOptions, async function(email, password, done) {
+  try {
+    let user_exist = await User.findOne({email: email})
 
-      if (!user) {
-        return done(null, false, {
-          error: "Your login details could not be verified. Please try again."
-        });
-      } else {
-        user.comparePassword(password, function(err, isMatch) {
-          if (err) {
-            return done(err);
-          }
+    if (user_exist) {
+      user_exist.comparePassword(password, (err, isMatch) => {
+        if (err) return done(err)
+
+        if (!isMatch) {
+          return done(null, false, { error: 'Your login details could not be verified. Please try again.'})
+        }
+
+        return done(null, user_exist)
+      })
+    } else {
+      let employee_exist = await Employee.findOne({email: email})
+
+      if (employee_exist) {
+        employee_exist.comparePassword(password, (err, isMatch) => {
+          if (err) return done(err)
 
           if (!isMatch) {
-            return done(null, false, {
-              error:
-                "Your login details could not be verified. Please try again."
-            });
+            return done(null, false, { error: 'Your login details could not be verified. Please try again.'})
           }
 
-          return done(null, user);
-        });
+          return done(null, employee_exist)
+        })
+      } else {
+        return done(null, false, { error: 'Your login details could not be verified. Please try again.'})
       }
     }
-  );
+
+  } catch(e) {
+    return done(e)
+  }
 });
 
 //  Setting JWT strategy options
@@ -57,19 +57,21 @@ const jwtOptions = {
   secretOrKey: config.secret
 };
 
-const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
-  User.findById(payload._id, (err, user) => {
-    if (err) {
-      return done(err, false);
-    }
+const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
+  try {
+    let user = await User.findById(payload._id)
 
     if (user) {
-      done(null, user);
+      done(null, user)
     } else {
-      done(null, false);
+      let employee = await Employee.findById(payload._id)
+
+      done(null, employee)
     }
-  });
-});
+  } catch (e) {
+    return done(e)
+  }
+})
 
 passport.use(jwtLogin);
 passport.use(localLogin);

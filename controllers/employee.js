@@ -1,0 +1,48 @@
+const sendJSONresponse = require('./shared').sendJSONresponse
+const Employee = require('../models/employee')
+
+async function employee_create (req, res, next) {
+  try {
+    const user = req.user
+    const subsidiary_id = req.params.subsidiary_id
+
+    let employee = new Employee(req.body)
+    employee.subsidiary = subsidiary_id
+
+    employee = await employee.save()
+
+    sendJSONresponse(res, 201, employee)
+  } catch(e) {
+    return next(e)
+  }
+}
+
+async function employee_list (req, res, next) {
+  try {
+    const subsidiary_id = req.params.subsidiary_id
+
+    let employees = await Employee.find({subsidiary: subsidiary_id})
+
+    sendJSONresponse(res, 200, employees)
+  } catch(e) {
+    return next(e)
+  }
+}
+
+async function employee_update (req, res, next) {
+  try {
+    const employee_id = req.params.employee_id
+
+    let employee = await Employee.findByIdAndUpdate(employee_id, req.body, { new: true })
+
+    sendJSONresponse(res, 200, employee)
+  } catch (e) {
+    return next(e)
+  }
+}
+
+module.exports = {
+  employee_create,
+  employee_list,
+  employee_update
+}

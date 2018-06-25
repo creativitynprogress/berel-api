@@ -1,0 +1,6 @@
+{"level":"error","message":"Assignment to constant variable."}
+{"code":11000,"index":0,"errmsg":"E11000 duplicate key error index: berel.employees.$email_1 dup key: { : \"empleado1@ail.com\" }","op":{"updatedAt":"2018-06-24T20:00:18.009Z","createdAt":"2018-06-24T20:00:18.009Z","name":"empleado1","email":"empleado1@ail.com","password":"$2a$05$fD0tx00797dnTNVy5Ws.GeFRwCp4spLfBtmGU4Qh8xFBFB4rSbBXe","subsidiary":"5b2feb9789965704f0669f50","_id":"5b2ff85194e3e710f4127a74","role":"Manager"}}
+{"level":"error","message":"EmployeefindById is not defined"}
+{"level":"error","message":"EmployeefindById is not defined"}
+{"code":11000,"index":0,"errmsg":"E11000 duplicate key error index: berel.employees.$username_1 dup key: { : null }","op":{"updatedAt":"2018-06-25T04:16:24.500Z","createdAt":"2018-06-25T04:16:24.500Z","full_name":"chalan","email":"chalan@mail.com","password":"$2a$05$xDWIojAxRVDvszHoKH4xOORYw4Pfz4MkvwME8Dxym1IflccdvNKBS","subsidiary":"5b2feb9789965704f0669f50","_id":"5b306c98fa081c1da4cdcd98","role":"Manager"}}
+{"name":"MongoError","message":"Topology was destroyed","level":"error"}
