@@ -4,3 +4,17 @@
 {"level":"error","message":"EmployeefindById is not defined"}
 {"code":11000,"index":0,"errmsg":"E11000 duplicate key error index: berel.employees.$username_1 dup key: { : null }","op":{"updatedAt":"2018-06-25T04:16:24.500Z","createdAt":"2018-06-25T04:16:24.500Z","full_name":"chalan","email":"chalan@mail.com","password":"$2a$05$xDWIojAxRVDvszHoKH4xOORYw4Pfz4MkvwME8Dxym1IflccdvNKBS","subsidiary":"5b2feb9789965704f0669f50","_id":"5b306c98fa081c1da4cdcd98","role":"Manager"}}
 {"name":"MongoError","message":"Topology was destroyed","level":"error"}
+{"level":"error","message":"Cannot read property 'user' of null"}
+{"level":"error","message":"Cannot read property 'user' of null"}
+{"level":"error","message":"Cannot read property 'user' of null"}
+{"level":"error","message":"Cannot read property 'user' of null"}
+{"level":"error","message":"Cannot read property 'user' of null"}
+{"level":"error","message":"Cannot read property 'user' of null"}
+{"message":"Cast to ObjectId failed for value \"null\" at path \"_id\" for model \"ProductOwner\"","name":"CastError","stringValue":"\"null\"","kind":"ObjectId","value":"null","path":"_id","level":"error"}
+{"message":"Cast to ObjectId failed for value \"null\" at path \"_id\" for model \"ProductOwner\"","name":"CastError","stringValue":"\"null\"","kind":"ObjectId","value":"null","path":"_id","level":"error"}
+{"message":"Cast to ObjectId failed for value \"null\" at path \"_id\" for model \"ProductOwner\"","name":"CastError","stringValue":"\"null\"","kind":"ObjectId","value":"null","path":"_id","level":"error"}
+{"message":"Cast to ObjectId failed for value \"null\" at path \"_id\" for model \"ProductOwner\"","name":"CastError","stringValue":"\"null\"","kind":"ObjectId","value":"null","path":"_id","level":"error"}
+{"message":"Cast to ObjectId failed for value \"null\" at path \"_id\" for model \"ProductOwner\"","name":"CastError","stringValue":"\"null\"","kind":"ObjectId","value":"null","path":"_id","level":"error"}
+{"level":"error","message":"Cannot read property '_id' of undefined"}
+{"level":"error","message":"Cannot read property 'name' of null"}
+{"level":"error","message":"Cannot read property '_id' of undefined"}

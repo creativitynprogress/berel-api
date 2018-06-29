@@ -76,7 +76,7 @@ async function purchase_list(req, res, next) {
 	try {
 		const subsidiary_id = req.params.subsidiary_id
 
-		let purchases = await Purchase.find({subsidiary: subsidiary_id}).populate('bases.base inks.ink provider')
+		let purchases = await Purchase.find({subsidiary: subsidiary_id}).populate('bases.base inks.ink products_owner.product provider')
 
 		sendJSONresponse(res, 200, purchases)
 	} catch(e) {
@@ -160,11 +160,13 @@ async function purchase_analysis (req, res, next) {
 			p.products_owner.map(product => {
 				const purchase = {
 					date: p.date,
-					product_id: product.product.product._id,
+					product_id: product.product.product_id,
 					pay_type: pay_type,
 					quantity: product.quantity,
 					total: product.total
 				}
+
+				formated_purchases.push(purchase)
 			})
 		})
 

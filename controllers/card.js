@@ -7,7 +7,13 @@ async function card_create(req, res, next) {
 		const user = req.user
 
 		let card = new Card(req.body)
-		card.user = user._id
+
+		if (user.role === 'User') {
+			card.user = user._id
+		} else {
+			let subsidiary = await Subsidiary.findById(user.subsidiary)
+			card.user = subsidiary.user
+		}
 
 		card = await card.save()
 
@@ -22,11 +28,11 @@ async function card_list(req, res, next) {
 		const user = req.user
 		let cards = []
 
-		if (user.role == 'Owner') {
+		if (user.role == 'User') {
 			cards = await Card.find({user: user._id})
 		} else {
 			let subsidiary = await Subsidiary.findById(user.subsidiary)
-
+			console.log(user)
 			cards = await Card.find({user: subsidiary.user})
 		}
 
