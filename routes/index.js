@@ -4,6 +4,7 @@ module.exports = (app, io) => {
     const require_login = require('../middlewares/auth').require_login
 
     const authenticathion_controller = require('../controllers/authentication')
+    const subscriptions_controller = require('../controllers/subscriptions')
     const user_controller = require('../controllers/user')
     const employee_controller = require('../controllers/employee')
     const products_controller = require('../controllers/product')
@@ -47,7 +48,8 @@ module.exports = (app, io) => {
     //  Employee
     api_routes.post('/subsidiary/:subsidiary_id/employee', require_auth, employee_controller.employee_create)
     api_routes.get('/subsidiary/:subsidiary_id/employee', require_auth, employee_controller.employee_list)
-    api_routes.put('/subsidiary/:subsidiary_id/employee/employee_id', require_auth, employee_controller.employee_update)
+    api_routes.put('/subsidiary/:subsidiary_id/employee/:employee_id', require_auth, employee_controller.employee_update)
+    api_routes.patch('/subsidiary/:subsidiary_id/employee/:employee_id/state', require_auth, employee_controller.employee_change_state)
 
     api_routes.post('/subsidiary', require_auth, subsidiary_controller.subsidiary_create)
     api_routes.get('/subsidiary/:subsidiaryId', require_auth, subsidiary_controller.subsidiary_details)
@@ -157,6 +159,9 @@ module.exports = (app, io) => {
     api_routes.get('/client', require_auth, client_controller.client_list)
     api_routes.put('/client/:clientId', require_auth, client_controller.client_update)
     api_routes.delete('/client/:clientId', require_auth, client_controller.client_delete)
+
+    //  Subscriptions
+    api_routes.post('/customer/add_card', require_auth, subscriptions_controller.add_card_to_customer)
 
     app.use('/api', api_routes)
 }

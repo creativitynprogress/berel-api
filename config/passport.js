@@ -33,7 +33,7 @@ const localLogin = new LocalStrategy(localOptions, async function(email, passwor
         employee_exist.comparePassword(password, (err, isMatch) => {
           if (err) return done(err)
 
-          if (!isMatch) {
+          if (!isMatch || employee_exist.enable == false) {
             return done(null, false, { error: 'Your login details could not be verified. Please try again.'})
           }
 

@@ -12,10 +12,12 @@ const employeeSchema = new Schema({
         required: true
     },
     password: {
-        type: String
+        type: String,
+        required: true
     },
     enable: {
-        type: Boolean
+        type: Boolean,
+        default: true
     },
     subsidiary: {
         type: Schema.Types.ObjectId, ref: 'Subsidiary'

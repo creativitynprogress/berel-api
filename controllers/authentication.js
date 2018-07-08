@@ -5,6 +5,7 @@ const User = require('../models/user')
 const config = require('../config/config')
 const sendJSONresponse = require('./shared').sendJSONresponse
 const mailer = require('../utils/email')
+const openpay = require('../utils/openpay')
 
 function generateToken(user) {
     return jwt.sign(user, config.secret, {})
@@ -16,6 +17,8 @@ function setUserInfo(user) {
         email: user.email,
         full_name: user.full_name,
         address: user.address,
+        state: user.state,
+        postal_code: user.postal_code,
         city: user.city,
         phone_number: user.phone_number,
         role: user.role,
@@ -45,14 +48,35 @@ async function register(req, res, next) {
 
         let user = new User(req.body)
 
-        //user = await user.save()
-        mailer.send_welcome(user.email, user.full_name)
-        let userInfo = setUserInfo(user)
+        let user_openpay = {
+          'name': user.full_name,
+          'email': user.email,
+          'address': {
+            'line1': user.address,
+            'country_code': 'MX',
+            'state': user.state,
+            'city': user.city,
+            'postal_code': user.postal_code
+          }
+        }
 
-        sendJSONresponse(res, 200, {
-            token: generateToken(userInfo),
-            user: userInfo
+        openpay.customers.create(user_openpay, async (error, customer) => {
+          if (error) throw Error(error)
+
+          user.openpay_id = customer.id
+          user = await user.save()
+
+          let userInfo = setUserInfo(user)
+
+          //mailer.send_welcome(user.email, user.full_name)
+
+          sendJSONresponse(res, 200, {
+              token: generateToken(userInfo),
+              user: userInfo
+          })
         })
+        //user = await user.save()
+
     } catch (e) {
         next(e)
     }

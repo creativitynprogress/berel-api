@@ -75,8 +75,16 @@ async function purchase_create(req, res, next) {
 async function purchase_list(req, res, next) {
 	try {
 		const subsidiary_id = req.params.subsidiary_id
+		let initial = req.query.initial ? Number(req.query.initial) : null
+    let end = req.query.end ? Number(req.query.end) : null
 
-		let purchases = await Purchase.find({subsidiary: subsidiary_id}).populate('bases.base inks.ink products_owner.product provider')
+		let query = {
+      subsidiary: subsidiary_id
+    }
+
+		if (initial && end) query.date = { $gt: initial, $lt: end }
+
+		let purchases = await Purchase.find(query).populate('bases.base inks.ink products_owner.product provider')
 
 		sendJSONresponse(res, 200, purchases)
 	} catch(e) {

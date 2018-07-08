@@ -33,7 +33,7 @@ async function employee_update (req, res, next) {
   try {
     const employee_id = req.params.employee_id
 
-    let employee = await Employee.findByIdAndUpdate(employee_id, req.body, { new: true })
+    let employee = await Employee.findByIdAndUpdate(employee_id, req.body, { new: true, fields: 'full_name email role subsidiary enable' })
 
     sendJSONresponse(res, 200, employee)
   } catch (e) {
@@ -41,8 +41,21 @@ async function employee_update (req, res, next) {
   }
 }
 
+async function employee_change_state (req, res, next) {
+  try {
+    const employee_id = req.params.employee_id
+
+    let employee = await Employee.findByIdAndUpdate(employee_id, req.body, { new: true, fields: 'full_name email role subsidiary enable' })
+
+    sendJSONresponse(res, 200, employee)
+  }catch (e) {
+    return next(e)
+  }
+}
+
 module.exports = {
   employee_create,
   employee_list,
-  employee_update
+  employee_update,
+  employee_change_state
 }

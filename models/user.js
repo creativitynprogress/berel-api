@@ -17,6 +17,8 @@ const userSchema = new Schema({
     address: {
         type: String
     },
+    state: { type: String },
+    postal_code: { type: Number },
     city: {
         type: String
     },
@@ -30,6 +32,10 @@ const userSchema = new Schema({
         type: String,
         enum: ['User', 'Admin'],
         default: 'User'
+    },
+    openpay_id: {
+      type: String,
+      required: true
     }
 }, {
     timestamps: true,
