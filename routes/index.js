@@ -162,6 +162,7 @@ module.exports = (app, io) => {
 
     //  Subscriptions
     api_routes.post('/customer/add_card', require_auth, subscriptions_controller.add_card_to_customer)
+    api_routes.get('/customer/cards', require_auth, subscriptions_controller.cards_list)
 
     app.use('/api', api_routes)
 }

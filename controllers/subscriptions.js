@@ -26,6 +26,17 @@ async function add_card_to_customer (req, res, next) {
   }
 }
 
+function cards_list (req, res, next) {
+  const user = req.user
+
+  openpay.customers.cards.list(user.openpay_id, (error, cards) => {
+    if (error) sendJSONresponse(res, 402, { error: error.description })
+
+    sendJSONresponse(res, 200, cards)
+  })
+}
+
 module.exports = {
-  add_card_to_customer
+  add_card_to_customer,
+  cards_list
 }

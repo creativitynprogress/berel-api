@@ -16,7 +16,8 @@ const baseItem = new Schema({
   product_id: { type: String },
   presentation: { type: String },
   quantity: { type: Number, min: 1 },
-  price: { type: Number }
+  price: { type: Number },
+  description: { type: String }
 }, { usePushEach: true })
 
 const productItem = new Schema({
