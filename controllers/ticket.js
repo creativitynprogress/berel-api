@@ -3,6 +3,7 @@ const Subsidiary = require('../models/subsidiary')
 const Base = require('../models/base')
 const BaseSubsidiary = require('../models/subsidiarybase')
 const Client = require('../models/client')
+const InkSubsidiary = require('../models/inksubsidiary')
 const sendJSONresponse = require('./shared').sendJSONresponse
 
 function pad(n, width, z) {
@@ -166,7 +167,36 @@ async function ticket_create (req, res, next) {
 
     //  Función para disminuir la base según la pintura que se compró
     ticket_copy = await Ticket.populate(ticket, {path: 'paints.paint', model: 'Paint'})
-    ticket_copy.paints.forEach(p => {
+    ticket_copy.paints.forEach(async (p) => {
+      // Función para disminuir las tintas del inventario
+      let paint_presentation = p.paint.presentations.find(pr => pr.name == p.presentation)
+      if (paint_presentation) {
+        let inks_subsidiary = await InkSubsidiary.find({subsidiary: subsidiary_id}).populate('ink')
+        
+        const ounce_liters = 0.0295735
+        const ounce_part_liters = ounce_liters / 46
+        console.log(ounce_part_liters)
+
+        paint_presentation.elements.forEach( async (i) => {
+          let is = inks_subsidiary.find( ink => ink.ink.description.includes(`(${i.ink})`))
+          if (is) {
+            console.log(i.ounce * ounce_liters, i)
+            const add = (i.ounce * ounce_liters) + (i.ouncePart * ounce_part_liters)
+            console.log(add)
+            if (is.count + add > 1) {
+              if (is.stock = 0) return
+
+              is.stock -= 1
+              is.count = 1 - is.count + add
+
+              await is.save()
+            } else {
+              is.count += add
+              await is.save()
+            }
+          }
+        })
+      }
       Base.find({line: p.paint.line}, 'presentation', (err, bases) => {
         if (err) throw Error(err.message)
         let base = bases.find(b => b.presentation === p.presentation)

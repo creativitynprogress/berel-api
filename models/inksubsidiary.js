@@ -6,7 +6,8 @@ const inkSubsidiarySchema = new Schema({
 	subsidiary: { type: Schema.Types.ObjectId, ref: 'Subsidiary', required: true},
 	stock: { type: Number, default: 0, min: 0},
 	min: { type: Number, default: 0},
-	max: { type: Number, default: 100 }
+	max: { type: Number, default: 100 },
+	count: { type: Number, default: 0 }
 })
 
 module.exports = mongoose.model('InkSubsidiary', inkSubsidiarySchema)

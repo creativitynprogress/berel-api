@@ -21,7 +21,7 @@ async function employee_list (req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiary_id
 
-    let employees = await Employee.find({subsidiary: subsidiary_id})
+    let employees = await Employee.find({subsidiary: subsidiary_id}, 'email enable full_name role')
 
     sendJSONresponse(res, 200, employees)
   } catch(e) {
