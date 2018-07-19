@@ -140,10 +140,12 @@ async function purchase_analysis (req, res, next) {
       if (p.pays.findIndex(p => p.type == 'transfer') >= 0) pay_type.push('Transferencia');
       if (p.pays.findIndex(p => p.type == 'check') >= 0) pay_type.push('Cheque');
 
+			console.log(p.bases, p.inks, p.products_owner)
+
 			p.bases.map(b => {
 				const purchase = {
           date: p.date,
-          product_id: b.base.product_id,
+          product_id: b.base ? b.base.product_id : 'Descontinuado',
           pay_type: pay_type,
           quantity: b.quantity,
           total: b.total,
@@ -156,7 +158,7 @@ async function purchase_analysis (req, res, next) {
 			p.inks.map(i => {
 				const purchase = {
 					date: p.date,
-					product_id: i.ink.product_id,
+					product_id: i.ink ? i.ink.product_id : 'Descontinuado',
 					pay_type: pay_type,
 					quantity: i.quantity,
 					total: i.total

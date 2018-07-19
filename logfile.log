@@ -48,3 +48,6 @@
 {"name":"MongoError","message":"read ECONNRESET","level":"error"}
 {"errors":{"_id":{"message":"Cast to ObjectID failed for value \"\" at path \"_id\"","name":"CastError","stringValue":"\"\"","kind":"ObjectID","value":"","path":"_id","reason":{"message":"Cast to ObjectId failed for value \"\" at path \"_id\"","name":"CastError","stringValue":"\"\"","kind":"ObjectId","value":"","path":"_id"}}},"_message":"Client validation failed","message":"Client validation failed: _id: Cast to ObjectID failed for value \"\" at path \"_id\"","name":"ValidationError","level":"error"}
 {"errors":{"_id":{"message":"Cast to ObjectID failed for value \"\" at path \"_id\"","name":"CastError","stringValue":"\"\"","kind":"ObjectID","value":"","path":"_id","reason":{"message":"Cast to ObjectId failed for value \"\" at path \"_id\"","name":"CastError","stringValue":"\"\"","kind":"ObjectId","value":"","path":"_id"}}},"_message":"Client validation failed","message":"Client validation failed: _id: Cast to ObjectID failed for value \"\" at path \"_id\"","name":"ValidationError","level":"error"}
+{"level":"error","message":"Cannot read property 'product_id' of null"}
+{"level":"error","message":"Cannot read property 'product_id' of null"}
+{"level":"error","message":"Cannot read property 'product_id' of null"}
