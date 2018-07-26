@@ -131,7 +131,8 @@ module.exports = (app, io) => {
     api_routes.get('/subsidiary/:subsidiary_id/sales', require_auth, tickets_controller.ticket_sales)
     api_routes.get('/subsidiary/:subsidiary_id/ticket/noboxcut', require_auth, tickets_controller.tickets_without_boxcut)
     api_routes.post('/subsidiary/:subsidiary_id/ticket', require_auth, tickets_controller.ticket_create)
-    api_routes.put('/subsidiary/:subsidiary_id/ticket/:ticket_id', require_auth, tickets_controller.ticket_update)
+    //api_routes.put('/subsidiary/:subsidiary_id/ticket/:ticket_id', require_auth, tickets_controller.ticket_update)
+    api_routes.put('/subsidiary/:subsidiary_id/ticket/:ticket_id/cancel', require_auth, tickets_controller.ticket_cancel)
     api_routes.get('/subsidiary/:subsidiary_id/tickets_to_invoice', require_auth, tickets_controller.tickets_to_invoice)
     api_routes.get('/subsidiary/:subsidiary_id/incomes_by_date', require_auth, tickets_controller.incomes_by_date)
 

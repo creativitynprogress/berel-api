@@ -313,6 +313,22 @@ async function incomes_by_date(req, res, next) {
   }
 }
 
+async function ticket_cancel (req, res, next) {
+  try {
+    const ticket_id = req.params.ticket_id
+
+    let ticket = await Ticket.findById(ticket_id)
+
+    ticket.canceled = true
+    ticket = await ticket.save()
+
+    sendJSONresponse(res, 200, ticket)
+
+  } catch(e) {
+    return next(e)
+  }
+}
+
 module.exports = {
   ticket_create,
   ticket_update,
@@ -323,5 +339,6 @@ module.exports = {
   tickets_to_invoice,
   ticket_set_invoiced,
   incomes_by_date,
-  ticket_sales
+  ticket_sales,
+  ticket_cancel
 }

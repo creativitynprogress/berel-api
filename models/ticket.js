@@ -46,6 +46,7 @@ const ticketSchema = new Schema({
     subsidiary: {type: Schema.Types.ObjectId, ref: 'Subsidiary'},
     date: { type: Number, required: true },
     payed: { type: Boolean, default: false },
+    canceled: { type: Boolean, default: false },
     client: { type: Schema.Types.ObjectId, ref: 'Client' },
     boxcut: { type: Schema.Types.ObjectId, ref: 'BoxCut' },
     discount: {
