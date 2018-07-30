@@ -32,7 +32,6 @@ async function card_list(req, res, next) {
 			cards = await Card.find({user: user._id})
 		} else {
 			let subsidiary = await Subsidiary.findById(user.subsidiary)
-			console.log(user)
 			cards = await Card.find({user: subsidiary.user})
 		}
 

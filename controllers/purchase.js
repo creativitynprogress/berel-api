@@ -135,12 +135,10 @@ async function purchase_analysis (req, res, next) {
 		purchases.map(p => {
 			let pay_type = []
 
-			if (p.pays.findIndex(p => p.type == 'cash') >= 0) pay_type.push('Efectivo');
-      if (p.pays.findIndex(p => p.type == 'card') >= 0) pay_type.push('Tarjeta');
-      if (p.pays.findIndex(p => p.type == 'transfer') >= 0) pay_type.push('Transferencia');
-      if (p.pays.findIndex(p => p.type == 'check') >= 0) pay_type.push('Cheque');
-
-			console.log(p.bases, p.inks, p.products_owner)
+			if (p.pays.findIndex(p => p.type == 'cash') >= 0) pay_type.push('Efectivo')
+      if (p.pays.findIndex(p => p.type == 'card') >= 0) pay_type.push('Tarjeta')
+      if (p.pays.findIndex(p => p.type == 'transfer') >= 0) pay_type.push('Transferencia')
+      if (p.pays.findIndex(p => p.type == 'check') >= 0) pay_type.push('Cheque')
 
 			p.bases.map(b => {
 				const purchase = {

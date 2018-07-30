@@ -51,3 +51,9 @@
 {"level":"error","message":"Cannot read property 'product_id' of null"}
 {"level":"error","message":"Cannot read property 'product_id' of null"}
 {"level":"error","message":"Cannot read property 'product_id' of null"}
+{"message":"Cast to ObjectId failed for value \"undefined\" at path \"subsidiary\" for model \"BoxCut\"","name":"CastError","stringValue":"\"undefined\"","kind":"ObjectId","value":"undefined","path":"subsidiary","level":"error"}
+{"level":"error","message":"Can't use $exist with ObjectId."}
+{"name":"MongoError","message":"unknown top level operator: $ne","ok":0,"errmsg":"unknown top level operator: $ne","code":2,"codeName":"BadValue","operationTime":"6583819710943461377","$clusterTime":{"clusterTime":"6583819710943461377","signature":{"hash":"ukrFsc+a+vNSJMjZI0UUCV8EwzQ=","keyId":"6580742405530583041"}},"level":"error"}
+{"name":"MongoError","message":"unknown top level operator: $not","ok":0,"errmsg":"unknown top level operator: $not","code":2,"codeName":"BadValue","operationTime":"6583819998706270209","$clusterTime":{"clusterTime":"6583819998706270209","signature":{"hash":"O5IavGfk8NUKNTkv6hWwqOEvJvM=","keyId":"6580742405530583041"}},"level":"error"}
+{"level":"error","message":"Can't use $exist with ObjectId."}
+{"level":"error","message":"Cannot convert undefined or null to object"}

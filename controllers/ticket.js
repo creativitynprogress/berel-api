@@ -49,8 +49,6 @@ async function ticket_list(req, res, next) {
       //query.paints = { $elemMatch: {line: line}}
     }
 
-
-    console.log(query)
     let tickets = await Ticket.find(query).populate('client')
     sendJSONresponse(res, 200, tickets)
 
@@ -63,7 +61,7 @@ async function ticket_sales (req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiary_id
 
-    let tickets = await Ticket.find({subsidiary: subsidiary_id, payed: true}).populate('client seller')
+    let tickets = await Ticket.find({subsidiary: subsidiary_id, payed: true, canceled: false}).populate('client seller')
 
     let sales = []
 
@@ -175,14 +173,11 @@ async function ticket_create (req, res, next) {
         
         const ounce_liters = 0.0295735
         const ounce_part_liters = ounce_liters / 46
-        console.log(ounce_part_liters)
 
         paint_presentation.elements.forEach( async (i) => {
           let is = inks_subsidiary.find( ink => ink.ink.description.includes(`(${i.ink})`))
           if (is) {
-            console.log(i.ounce * ounce_liters, i)
             const add = (i.ounce * ounce_liters) + (i.ouncePart * ounce_part_liters)
-            console.log(add)
             if (is.count + add > 1) {
               if (is.stock = 0) return
 
@@ -300,7 +295,8 @@ async function incomes_by_date(req, res, next) {
 
     let query = {
       subsidiary: subsidiary_id,
-      payed: true
+      payed: true,
+      canceled: false
     }
 
     if (initial && end) query.date = { $gt: initial, $lt: end }
@@ -316,8 +312,52 @@ async function incomes_by_date(req, res, next) {
 async function ticket_cancel (req, res, next) {
   try {
     const ticket_id = req.params.ticket_id
+    const subsidiary_id = req.params.subsidiary_id
 
     let ticket = await Ticket.findById(ticket_id)
+
+    //  Función para disminuir la base según la pintura que se compró
+    ticket_copy = await Ticket.populate(ticket, {path: 'paints.paint', model: 'Paint'})
+    ticket_copy.paints.forEach(async (p) => {
+      // Función para disminuir las tintas del inventario
+      let paint_presentation = p.paint.presentations.find(pr => pr.name == p.presentation)
+      if (paint_presentation) {
+        let inks_subsidiary = await InkSubsidiary.find({subsidiary: subsidiary_id}).populate('ink')
+        
+        const ounce_liters = 0.0295735
+        const ounce_part_liters = ounce_liters / 46
+
+        paint_presentation.elements.forEach( async (i) => {
+          let is = inks_subsidiary.find( ink => ink.ink.description.includes(`(${i.ink})`))
+          if (is) {
+            const add = (i.ounce * ounce_liters) + (i.ouncePart * ounce_part_liters)
+            if (is.count - add < 0) {
+              if (is.stock = 0) return
+
+              is.stock += 1
+              is.count = 1 - add
+
+              await is.save()
+            } else {
+              is.count -= add
+              await is.save()
+            }
+          }
+        })
+      }
+      Base.find({line: p.paint.line}, 'presentation', (err, bases) => {
+        if (err) throw Error(err.message)
+        let base = bases.find(b => b.presentation === p.presentation)
+        if (base) {
+          BaseSubsidiary.findOne({base: base._id}, (err, bs) => {
+            if (bs) {
+              bs.stock = bs.stock + p.quantity
+              bs.save()
+            }
+          })
+        }
+      })
+    })
 
     ticket.canceled = true
     ticket = await ticket.save()

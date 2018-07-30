@@ -54,10 +54,12 @@ async function boxcut_request (req, res, next) {
 		let tickets = await Ticket.find({_id: {$in: tickets_ids}}).populate('cash_pays card_pays checks transfers')
 
 		let results = tickets.map(async (ticket) => {
-			ticket.cash_pays.map(p => cash_pays += p.amount)
-			ticket.card_pays.map(p => card_pays += p.amount)
-			ticket.checks.map(p => checks += p.amount)
-			ticket.transfers.map(p => transfers += p.amount)
+			if (!ticket.canceled) {
+				ticket.cash_pays.map(p => cash_pays += p.amount)
+				ticket.card_pays.map(p => card_pays += p.amount)
+				ticket.checks.map(p => checks += p.amount)
+				ticket.transfers.map(p => transfers += p.amount)
+			}
 		})
 
 	
