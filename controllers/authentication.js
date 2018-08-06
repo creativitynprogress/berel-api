@@ -48,33 +48,44 @@ async function register(req, res, next) {
 
         let user = new User(req.body)
 
-        let user_openpay = {
-          'name': user.full_name,
-          'email': user.email,
-          'address': {
-            'line1': user.address,
-            'country_code': 'MX',
-            'state': user.state,
-            'city': user.city,
-            'postal_code': user.postal_code
-          }
+        if (user.role === 'User') {
+            let user_openpay = {
+                'name': user.full_name,
+                'email': user.email,
+                'address': {
+                  'line1': user.address,
+                  'country_code': 'MX',
+                  'state': user.state,
+                  'city': user.city,
+                  'postal_code': user.postal_code
+                }
+              }
+      
+              openpay.customers.create(user_openpay, async (error, customer) => {
+                if (error) throw Error(error)
+      
+                user.openpay_id = customer.id
+                user = await user.save()
+      
+                let userInfo = setUserInfo(user)
+      
+                //mailer.send_welcome(user.email, user.full_name)
+      
+                sendJSONresponse(res, 200, {
+                    token: generateToken(userInfo),
+                    user: userInfo
+                })
+              })
+        } else {
+            user = await user.save()
+      
+            let userInfo = setUserInfo(user)
+      
+            sendJSONresponse(res, 200, {
+                token: generateToken(userInfo),
+                user: userInfo
+            })
         }
-
-        openpay.customers.create(user_openpay, async (error, customer) => {
-          if (error) throw Error(error)
-
-          user.openpay_id = customer.id
-          user = await user.save()
-
-          let userInfo = setUserInfo(user)
-
-          //mailer.send_welcome(user.email, user.full_name)
-
-          sendJSONresponse(res, 200, {
-              token: generateToken(userInfo),
-              user: userInfo
-          })
-        })
         //user = await user.save()
 
     } catch (e) {

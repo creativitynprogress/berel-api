@@ -2,6 +2,7 @@
 
 const Paint = require('../models/paint')
 const SubsidiaryRange = require('../models/subsidiaryrange')
+const Subsidiary = require('../models/subsidiary')
 const sendJSONresponse = require('./shared').sendJSONresponse
 const excelReader = require('../utils/excelReader')
 const fs = require('fs')
@@ -128,6 +129,14 @@ async function paint_delete(req, res, next) {
 async function paint_list(req, res, next) {
     try {
         const user = req.user
+        let owner_id
+
+        if (user.role != 'User' && user.role != 'Admin') {
+            let subsidiary = await Subsidiary.findById(user._id)
+            owner_id = subsidiary.user
+        } else {
+            owner_id = user._id
+        }
         const lineId = req.query.lineId
         let paints = []
 
@@ -135,11 +144,43 @@ async function paint_list(req, res, next) {
             paints = await Paint.find(
             {
                 line: lineId,
-                $or: [{user: user._id}, {user: {$exists: false}}]
+                $or: [{user: owner_id}, {user: {$exists: false}}]
             }, '-presentations').populate('line range')
         } else {
             paints = await Paint.find({$or: [{user: user._id}, {user: {$exists: false}}]}, '-presentations').populate('line range')
         }
+
+        sendJSONresponse(res, 200, paints)
+    } catch(e) {
+        return next(e)
+    }
+}
+
+async function paint_list_search (req, res, next) {
+    try {
+        const user = req.user
+        console.log(user)
+        let owner_id
+
+        if (user.role != 'User') {
+            let subsidiary = await Subsidiary.findById(user.subsidiary)
+            console.log(subsidiary)
+            owner_id = subsidiary.user
+        } else {
+            owner_id = user._id
+        }
+
+        const lineId = req.query.lineId
+        const search = new RegExp(req.query.search)
+
+        let paints = await Paint.find(
+            {
+                line: lineId,
+                $or: [{user: owner_id}, {user: {$exists: false}}],
+                color: { $regex: search } 
+            }, '-presentations').populate('line range')
+            .limit(5)
+        
 
         sendJSONresponse(res, 200, paints)
     } catch(e) {
@@ -260,5 +301,6 @@ module.exports = {
     presentation_create,
     presentation_update,
     presentation_delete,
-    paints_by_excel
+    paints_by_excel,
+    paint_list_search
 }

@@ -34,8 +34,7 @@ const userSchema = new Schema({
         default: 'User'
     },
     openpay_id: {
-      type: String,
-      required: true
+      type: String
     }
 }, {
     timestamps: true,

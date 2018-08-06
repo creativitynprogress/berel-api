@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
 
 mongoose.Promise = require('bluebird')
 mongoose.connect(config.database, {
-  useMongoClient: true
+  useNewUrlParser: true
 })
 
 //app.set('view engine', 'ejs')

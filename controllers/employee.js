@@ -3,16 +3,17 @@ const Employee = require('../models/employee')
 
 async function employee_create (req, res, next) {
   try {
-    const user = req.user
     const subsidiary_id = req.params.subsidiary_id
 
     let employee = new Employee(req.body)
+    //employee = Object.assign(employee, req.body)
     employee.subsidiary = subsidiary_id
 
     employee = await employee.save()
 
     sendJSONresponse(res, 201, employee)
   } catch(e) {
+    console.log(e)
     return next(e)
   }
 }

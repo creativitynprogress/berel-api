@@ -6,10 +6,13 @@ const multer = require('multer')
 const paint_routes = express.Router()
 
 paint_routes.post('/', require_auth, paints_controller.paint_create)
+
 paint_routes.get('/', require_auth, paints_controller.paint_list)
 paint_routes.get('/owner', require_auth, paints_controller.paint_owner_list)
+paint_routes.get('/search', require_auth, paints_controller.paint_list_search)
 paint_routes.get('/:paint_id', require_auth, paints_controller.paint_details)
 paint_routes.get('/user/:paint_id', require_auth, paints_controller.paint_details_for_users)
+
 paint_routes.put('/:paint_id', require_auth, paints_controller.paint_update)
 paint_routes.delete('/:paint_id', require_auth, paints_controller.paint_delete)
 paint_routes.post('/:paint_id/presentation', require_auth, paints_controller.presentation_create)

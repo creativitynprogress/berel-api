@@ -20,7 +20,9 @@ const employeeSchema = new Schema({
         default: true
     },
     subsidiary: {
-        type: Schema.Types.ObjectId, ref: 'Subsidiary'
+        type: Schema.Types.ObjectId, 
+        ref: 'Subsidiary',
+        required: true
     },
     role: {
         type: String,
@@ -34,14 +36,14 @@ const employeeSchema = new Schema({
 
 employeeSchema.pre('save', function (next) {
     const SALT_FACTOR = 5
-    const owner = this
+    const user = this
 
-    if (!owner.isModified('password')) return next()
+    if (!user.isModified('password')) return next()
 
     const salt = bcrypt.genSaltSync(SALT_FACTOR)
-    const hash = bcrypt.hashSync(owner.password, salt)
+    const hash = bcrypt.hashSync(user.password, salt)
 
-    owner.password = hash
+    user.password = hash
     next()
 })
 
