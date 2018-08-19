@@ -8,6 +8,8 @@ const subsidiarySchema = new Schema({
   text_ticket: { type: String },
   user: {type: Schema.Types.ObjectId, ref: 'User'},
   subsidiary_number: {type: Number}
+}, {
+  versionKey: false
 })
 
 module.exports = mongoose.model('Subsidiary', subsidiarySchema)
