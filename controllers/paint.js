@@ -132,7 +132,7 @@ async function paint_list(req, res, next) {
         let owner_id
 
         if (user.role != 'User' && user.role != 'Admin') {
-            let subsidiary = await Subsidiary.findById(user._id)
+            let subsidiary = await Subsidiary.findById(user.subsidiary)
             owner_id = subsidiary.user
         } else {
             owner_id = user._id
