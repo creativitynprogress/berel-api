@@ -168,6 +168,7 @@ async function ticket_create (req, res, next) {
     ticket_copy.paints.forEach(async (p) => {
       // Función para disminuir las tintas del inventario
       let paint_presentation = p.paint.presentations.find(pr => pr.name == p.presentation)
+
       if (paint_presentation) {
         let inks_subsidiary = await InkSubsidiary.find({subsidiary: subsidiary_id}).populate('ink')
         
@@ -192,11 +193,14 @@ async function ticket_create (req, res, next) {
           }
         })
       }
+
       Base.find({line: p.paint.line}, 'presentation', (err, bases) => {
         if (err) throw Error(err.message)
         let base = bases.find(b => b.presentation === p.presentation)
+        console.log(base)
         if (base) {
-          BaseSubsidiary.findOne({base: base._id}, (err, bs) => {
+          BaseSubsidiary.findOne({base: base._id, subsidiary: subsidiary_id}, (err, bs) => {
+            console.log(bs)
             if (bs) {
               if (bs.stock > 0 && bs.stock > p.quantity) {
                 bs.stock = bs.stock - p.quantity
