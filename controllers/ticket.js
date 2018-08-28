@@ -317,8 +317,10 @@ async function ticket_cancel (req, res, next) {
   try {
     const ticket_id = req.params.ticket_id
     const subsidiary_id = req.params.subsidiary_id
+    const reason_canceled = req.body.reason_canceled
 
     let ticket = await Ticket.findById(ticket_id)
+
 
     //  Función para disminuir la base según la pintura que se compró
     ticket_copy = await Ticket.populate(ticket, {path: 'paints.paint', model: 'Paint'})
@@ -364,6 +366,7 @@ async function ticket_cancel (req, res, next) {
     })
 
     ticket.canceled = true
+    ticket.reason_canceled = reason_canceled
     ticket = await ticket.save()
 
     sendJSONresponse(res, 200, ticket)

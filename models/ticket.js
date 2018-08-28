@@ -57,7 +57,8 @@ const ticketSchema = new Schema({
         state: { type: String, enum: ['pending', 'no', 'invoiced'], default: 'no' },
         reason: { type: String }
     },
-    folio: { type: String, required: true}
+    folio: { type: String, required: true},
+    reason_canceled: { type: String }
 }, {
     timestamps: true,
     versionKey: false,

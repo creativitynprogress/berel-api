@@ -1,1 +1,2 @@
 {"level":"error","message":"User alredy exist"}
+{"body":"Me equivoque","status":400,"statusCode":400,"level":"error","message":"Unexpected token M"}
