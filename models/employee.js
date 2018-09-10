@@ -47,6 +47,7 @@ employeeSchema.pre('save', function (next) {
     next()
 })
 
+
 //  Method to compare password for login
 employeeSchema.methods.comparePassword = function (candidatePassword, cb) {
     const isMatch = bcrypt.compareSync(candidatePassword, this.password)

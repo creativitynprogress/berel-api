@@ -61,7 +61,7 @@ async function ticket_sales (req, res, next) {
   try {
     const subsidiary_id = req.params.subsidiary_id
 
-    let tickets = await Ticket.find({subsidiary: subsidiary_id, payed: true, canceled: false}).populate('client seller')
+    let tickets = await Ticket.find({subsidiary: subsidiary_id, payed: true}).populate('client seller')
 
     let sales = []
 
@@ -84,7 +84,9 @@ async function ticket_sales (req, res, next) {
           card_pays: t.card_pays,
           client: t.client ? t.client.name : 'Venta mostrador',
           seller: t.seller.full_name,
-          description: p.description
+          description: p.description,
+          invoice: t.invoice.reason,
+          canceled: t.canceled
         }
 
         sales.push(sale)
@@ -102,7 +104,9 @@ async function ticket_sales (req, res, next) {
           card_pays: t.card_pays,
           client: t.client ? t.client.name : 'Venta mostrador',
           seller: t.seller.full_name,
-          description: b.description
+          description: b.description,
+          invoice: t.invoice.reason,
+          canceled: t.canceled
         }
 
         sales.push(sale)
@@ -119,7 +123,9 @@ async function ticket_sales (req, res, next) {
           pay_type: pay_type,
           card_pays: t.card_pays,
           client: t.client ? t.client.name : 'Venta mostrador',
-          seller: t.seller.full_name
+          seller: t.seller.full_name,
+          invoice: t.invoice.reason,
+          canceled: t.canceled
         }
 
         sales.push(sale)
